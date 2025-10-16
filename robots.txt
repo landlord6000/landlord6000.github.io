@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://твой-домен.ру/sitemap.xml
+Sitemap: https://landlord6000.github.io/sitemap.xml
