@@ -338,8 +338,8 @@
       сидят, на сам мыс выйти не получилось, так как стало мокро. Пошли назад, вдоль канала искать переход.</p>
 
     <div class="gallery">
-      <div class="thumb"><img src="./photos/1.jpg" alt="Вид с мыса" loading="lazy"></div>
-      <div class="thumb"><img src="./photos/2.jpg" alt="Канал" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/1.jpg" data-full="./photos/1.jpg" alt="Вид с мыса" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/2.jpg" data-full="./photos/2.jpg" alt="Канал" loading="lazy"></div>
     </div>
 
     <!-- X4 -->
@@ -352,7 +352,8 @@
       никакой, так же мокрое поле, трава по макушку.</p>
 
     <div class="gallery single">
-      <div class="thumb"><img src="./photos/3.jpg" alt="Идём через кусты" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/3.jpg" data-full="./photos/3.jpg" alt="Идём через кусты" loading="lazy">
+      </div>
     </div>
     <div class="caption">Идём через кусты</div>
 
@@ -374,7 +375,8 @@
       есть, но её нужно скорее нащупывать ногами, глазами не видно.</p>
 
     <div class="gallery single">
-      <div class="thumb"><img src="./photos/4.jpg" alt="Едва заметная тропа" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/4.jpg" data-full="./photos/4.jpg" alt="Едва заметная тропа" loading="lazy">
+      </div>
     </div>
     <div class="caption">Едва заметная тропа</div>
 
@@ -386,7 +388,7 @@
     <p>Поворот тропы виден отчётливо — вот так она выглядит в том месте.</p>
 
     <div class="gallery single">
-      <div class="thumb"><img src="./photos/5.jpg" alt="Поворот тропы" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/5.jpg" data-full="./photos/5.jpg" alt="Поворот тропы" loading="lazy"></div>
     </div>
     <div class="caption">Поворот тропы</div>
 
@@ -399,9 +401,12 @@
       влево). Переход — по импровизированному мосту. Ориентир — дерево, свисающее над водой.</p>
 
     <div class="gallery">
-      <div class="thumb"><img src="./photos/6.jpg" alt="Дерево-ориентир" loading="lazy"></div>
-      <div class="thumb"><img src="./photos/7.jpg" alt="Переход по плотине 1" loading="lazy"></div>
-      <div class="thumb"><img src="./photos/8.jpg" alt="Переход по плотине 2" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/6.jpg" data-full="./photos/6.jpg" alt="Дерево-ориентир" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/7.jpg" data-full="./photos/7.jpg" alt="Переход по плотине 1" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/8.jpg" data-full="./photos/8.jpg" alt="Переход по плотине 2" loading="lazy">
+      </div>
     </div>
 
     <!-- X8 -->
@@ -416,7 +421,8 @@
       упёрлись в болото, обошли слева.</p>
 
     <div class="gallery single">
-      <div class="thumb"><img src="./photos/10.jpg" alt="Типичный заболоченный участок" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/10.jpg" data-full="./photos/10.jpg" alt="Типичный заболоченный участок"
+          loading="lazy"></div>
     </div>
     <div class="caption">Типичный заболоченный участок</div>
 
@@ -428,7 +434,8 @@
     <p>Отличный переход.</p>
 
     <div class="gallery single">
-      <div class="thumb"><img src="./photos/9.jpg" alt="Отличный переход" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/9.jpg" data-full="./photos/9.jpg" alt="Отличный переход" loading="lazy">
+      </div>
     </div>
     <div class="caption">Отличный переход</div>
 
@@ -443,7 +450,8 @@
       тяжёлый участок — X8–X10 (возможно, начинается чуть раньше).</p>
 
     <div class="gallery single">
-      <div class="thumb"><img src="./photos/11.jpg" alt="Хороший переход" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/11.jpg" data-full="./photos/11.jpg" alt="Хороший переход" loading="lazy">
+      </div>
     </div>
     <div class="caption">Хороший переход</div>
 
@@ -462,7 +470,8 @@
     <p>Тролльный мостик. Мост есть, но он полностью под водой, глубина по щиколотку.</p>
 
     <div class="gallery single">
-      <div class="thumb"><img src="./photos/12.jpg" alt="Тролльный мостик" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/12.jpg" data-full="./photos/12.jpg" alt="Тролльный мостик" loading="lazy">
+      </div>
     </div>
     <div class="caption">Тролльный мостик</div>
 
@@ -493,7 +502,7 @@
     function openAt(i) {
       current = (i + thumbs.length) % thumbs.length;
       const img = thumbs[current];
-      lbImg.src = img.src;
+      lbImg.src = img.dataset.full || img.src;
       lbImg.alt = img.alt;
       lbCap.textContent = img.alt || '';
       lightbox.classList.add('open');
