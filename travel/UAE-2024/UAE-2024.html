@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Небольшой очерк об ОАЭ (Рас-Эль-Хайма)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #E9EDE3;
+      --bg-card: #F5F4EC;
+      --text: #20241C;
+      --muted: #6E7566;
+      --accent: #35606B;
+      --accent2: #6B7D4F;
+      --line: rgba(53, 96, 107, 0.18);
+      --max-w: 760px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 64px 24px 120px;
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-optical-sizing: auto;
+      font-size: clamp(2rem, 5vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 48px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    p {
+      margin: 0 0 20px;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      margin: 56px 0 18px;
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .day-heading {
+      margin: 48px 0 16px;
+    }
+
+    .day-heading.tight {
+      margin: 36px 0 14px;
+    }
+
+    .day-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.6rem;
+    }
+
+    blockquote {
+      margin: 20px 0;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border-left: 3px solid var(--accent);
+      border-radius: 2px;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    blockquote p:last-child {
+      margin-bottom: 0;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 0 0 20px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 48px 0;
+    }
+
+    .caption {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 10px 0 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .caption::before {
+      content: "◆";
+      font-size: 0.6rem;
+      color: var(--accent);
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      margin-bottom: 28px;
+      opacity: 0.7;
+      transition: opacity .2s;
+    }
+
+    .home-link:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .gallery.single {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery.single .thumb {
+      aspect-ratio: 16/10;
+    }
+
+    .thumb {
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      border-radius: 3px;
+      cursor: zoom-in;
+      background: var(--bg-card);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .35s ease;
+    }
+
+    .thumb:hover img {
+      transform: scale(1.06);
+    }
+
+    .video-wrap {
+      margin-bottom: 12px;
+      border-radius: 3px;
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+
+    .video-wrap video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      background: var(--bg-card);
+    }
+
+    strong {
+      color: var(--text);
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 17, 12, 0.94);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 40px;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 2px;
+    }
+
+    .lightbox-cap {
+      position: absolute;
+      bottom: 28px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #E9EDE3;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    .lb-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #E9EDE3;
+      font-size: 2.4rem;
+      cursor: pointer;
+      padding: 12px 18px;
+      opacity: 0.7;
+      transition: opacity .2s;
+      font-family: serif;
+      line-height: 1;
+    }
+
+    .lb-btn:hover {
+      opacity: 1;
+    }
+
+    .lb-prev {
+      left: 6px;
+    }
+
+    .lb-next {
+      right: 6px;
+    }
+
+    .lb-close {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: #E9EDE3;
+      font-size: 1.8rem;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .lb-close:hover {
+      opacity: 1;
+    }
+
+    @media (max-width:600px) {
+      .wrap {
+        padding: 40px 16px 90px;
+      }
+
+      .lb-btn {
+        font-size: 1.8rem;
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <a href="../../index.html" class="home-link">← на главную</a>
+
+    <h1>Небольшой очерк об ОАЭ (Рас-Эль-Хайма)</h1>
+    <div class="subtitle">Поездка · 01.2024</div>
+
+    <div class="section-title">О месте</div>
+
+    <p>Объединенные Арабские Эмираты это небольшая страна на юго-востоке Аравийского полуострова. Климат тут тропический
+      пустынный, что означает минимальное число осадков (1-2 раза в год), чрезвычайно высокие температуры и скудную
+      растительность.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/00.jpg" data-full="./photos/00.jpg" alt="Вид на ОАЭ" loading="lazy"></div>
+    </div>
+
+    <p>Казалось бы, никаких предпосылок для хорошего уровня жизни у этого региона нет, жизнь тут и была не очень то
+      сладкой то 70-ых годов. Так как, почти всю страну занимает пустыня, земледелие тут невозможно, поэтому основным
+      занятием, приносившим хоть какие-то деньги была добыча жемчуга. Однако, после первой мировой войны спрос на жемчуг
+      сильно упал, тем не менее в 50-ых годах в регионе обнаружили нефть, причем столько нефти, сколько нет ни у кого
+      (при расчете на душу населения).</p>
+
+    <p>В 70-ые года земли ОАЭ обрели независимость и объединились в единую страну (тем не менее и по сей день страна
+      состоит из 7 независимых государств). Теперь самое интересное, как же арабы распорядились своими ресурсами. А
+      распорядились они ими с таким умом, что я до сих пор не могу понять, почему они а не мы… Казалось бы, довольно
+      дремучие люди, но смогли скооперироваться и начать развивать страну — каждый свой Эмират. Они сразу смекнули, что
+      просто на продаже сырья далеко не уедешь и решили диверсифицировать экономику. В итоге в стране повсюду выросли
+      гигантские небоскребы, музеи, сады, привлекающие туристов. Кстати, несмотря, что с ОАЭ у всех в основном
+      ассоциируется Дубай, столицей является Абу-Даби, последний же обладает большей частью запасов нефти, и его эмир
+      является президентом страны. Это показывает, что имея куда меньше запасов сырья, чем столица, Дубай смог правильно
+      разыграть карты и вложиться в нужные проекты.</p>
+
+    <p>В итоге вместо безжизненной пустыни выросли мегаполисы и страна стала по сути аналогом Швейцарии, только еще
+      лучше. По оценке Passport Index, граждане ОАЭ имеют лучший паспорт в мире по количеству стран для безвизового
+      посещения.</p>
+
+    <hr>
+
+    <div class="day-heading">
+      <div class="day-title">Собственные наблюдения</div>
+    </div>
+
+    <p>Теперь немного про собственные ощущения от этой страны, самое первое, что бросается в глаза это то, что на улице
+      почти нет местных жителей, то есть работники в магазинах, прохожие, таксисты и все остальные - индийцы,
+      пакистанцы, филиппинцы и прочие. Действительно, 89% населения страны - мигранты, они заняты на всех основных
+      должностях, кроме государственных. А вот как раз на государственных и управленчиских трудятся местные арабы. То
+      есть в обычной жизни вы почти с ними не сталкиваетесь, получается довольно сильное расслоение общества, однако
+      если вспомнить про то, что мигранты получают намного больше денег, чем в своей стране и при этом находятся в
+      довольно дружелюбной по отношению к ним среде, все уже не выглядит так плохо.</p>
+
+    <p>Второе же, что бросается в глаза это ужасное проектирование улиц (вот тут сразу надо сделать оговорку, что в
+      крупных городах мы не были, только на автобусе мимо проезжали, однако я почти уверен, что в целом подход к
+      градостроительству у эмиров одинаковый). Города сделаны для передвижения на машине, то есть тротуары находятся в
+      рандомных местах, иногда обрываются, иногда становятся узкими, иногда отсутствуют. Место, где пешеходам уступают
+      дорогу мы нашли всего одно в городе)) около главного ТЦ.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/10.jpg" data-full="./photos/10.jpg" alt="Газон вместо тротуара"
+          loading="lazy"></div>
+    </div>
+    <div class="caption">Газон есть, а лучше бы сделали тротуар</div>
+
+    <p>В нашем городе напрочь отсутствовал транспорт, были только автобусы, однако цена на них была такая же, как на
+      такси. За поездку в 6км мы заплатили 12 AED (за двоих 24 AED) на человека, то есть 280 рублей . Такси в стране
+      государственное и ездит по счетчику, и на обратном пути он нам за ту же поездку насчитал 16 AED. Так что за
+      пределами крупных городов передвигаться нужно либо на арендованной машине, либо на такси.</p>
+
+    <p>Что в Эмиратах порадовало так это выбор в магазинах, даже в таком маленьком городе, как Рас-Эль-Хайма, можно было
+      купить практически всё, причем со всех уголков света (очень много импортных товаров, сами Эмираты мало что
+      производят).</p>
+
+    <p>В отношении пляжного отдыха очень много нареканий, в городе довольно красивые пляжи, однако совершенно
+      необорудованные, нету ни переодевалок, ни душей, только спасатели. Плюс никаких тебе торговых рядов, как на
+      обычных курортах. Это реально просто город.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/20.jpg" data-full="./photos/20.jpg" alt="Городской пляж" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/21.jpg" data-full="./photos/21.jpg" alt="Магазин сладостей" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/22.jpg" data-full="./photos/22.jpg" alt="Большая Амурская магистраль"
+          loading="lazy">
+      </div>
+    </div>
+
+    <p>Подытожу, как примерно ощущалась жизнь в нашем городке: гулять по улице неприятно, хочется сразу заказать такси,
+      город не ухоженный, дома понатыканы на пустырях и дай бог соединены чем-то типа дороги (хотя если уйти в пригород,
+      там все выглядит как-то более естественно). Выбор в магазинах шикарный, однако цены раза в 1.5-2 выше, чем в
+      России.</p>
+
+    <p>Впечатления я описал сумбурно, но, вроде, смог примерно описать что там происходит.</p>
+
+    <div class="day-heading tight">
+      <div class="day-title">Зачем туда ехать?</div>
+    </div>
+
+    <p>Вот это, кстати, хороший вопрос. Пожалуй, есть несколько причин.</p>
+
+    <p>Первая — шоппинг, в крупных городах есть, по сути, все, причем цены тут для европейцев будут ниже, чем дома. А
+      россияне смогут посетить магазины, покинувшие Россию.</p>
+
+    <p>Вторая —посмотреть, что же там эти арабы понастроили в этих своих Дубаях. Тоже хорошее направление мысли,
+      опять-таки, в крупных городах, действительно много чудес, которые многим будет интересно посетить, однако тут
+      стоит учесть, что посещение почти всех этих точек притяжения может быть дорогим. Я вообще заметил, что везде кроме
+      магазинов для местных, цены неадекватные. Мы были на экскурсии, там нам предлагали коктейли за 40 AED, а это как
+      бы 2к рублей.</p>
+
+    <p>Третье —пофоткаться на фоне небоскребов. Ну тут все понятно, не будем про это</p>
+
+    <p>Четвертое — пляжный отдых. Тут про крупные города не могу сказать, у нас, как я уже написал выше, с пляжем
+      проблем не было, была проблема с атмосферой. То есть город не ощущался как место курорта и отдыха, скорее он
+      ощущался как место, где тебя постоянно хочет сбить машина.</p>
+
+    <p>Пятое — nature. То есть природа этой замечательной тропической пустыни. Направление спорное, так как почти
+      никакой природы там нет, однако у нас оно стало основным, в следствии того, что 1-3 направления нас не
+      интересовали, про него подробнее</p>
+
+    <div class="day-heading tight">
+      <div class="day-title">Nature</div>
+    </div>
+
+    <p>Что для вас значит «выехать на природу» ? Может быть пожарить шашлыки, или сделать пикник, или может быть
+      наконец-то взять удочку и снасти и порыбачить? В общем, у местных, с этим потруднее, для них это в основном
+      сводится к катанию на джипах по дюнам или к сидению на песке. Ну или на крайняк, можно заехать на гору и там
+      посидеть. Главное, чтобы можно было заехать.</p>
+
+    <div class="video-wrap">
+      <video controls preload="metadata">
+        <source src="./videos/00.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <p>Так вот, я бы выделил 3 основных направления того, куда можно отправиться: пустыня, горы, залив. Сразу скажу, что
+      «залив» я пропущу, так как мы не выплывали в него.</p>
+
+    <div class="day-heading tight">
+      <div class="day-title">Пустыня</div>
+    </div>
+
+    <p>Начнем с пустыни, раз уже я её упомянул. Если взглянуть на карту, можно заметить, что почти вся страна - одна
+      сплошная пустыня, так что как ни крути, а придется искать в ней развлечения. Можно представлять себя кочевником,
+      идущим к оазису, можно мега гонщиком, а можно кастплеить Саида из Белого солнца пустыни. Простор для фантазии
+      невероятный.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/30.jpg" data-full="./photos/30.jpg" alt="Дюны" loading="lazy"></div>
+    </div>
+
+    <p>Сидя дома на диване и имея билеты туда-обратно в ОАЭ мы строили коварные планы и плели гениальные логистические
+      сети. С пустыней у нас был план, заброситься на такси на какой-нибудь участок трассы около нац. пака Al Wadi,
+      протопать насквозь 5-6 км и выйти к другой трассе. И в принципе план прикольный, если не учитывать тот момент, что
+      после того, как мы выйдем к другой трассе, обратно в отель у нас не получится добраться. Связь в ОАЭ потрясающе
+      дорогая, симку мы не брали, самый дешевый вариант, это заплатить своему оператору 400р и получить на день
+      безлимитный интернет. Но при всем при этом, вызвать в Рас-Эль-Хайме такси (а уж в пустыне и подавно) с телефона
+      НЕВОЗМОЖНО. То есть только поймать на улице. Хотя сто процентов, как-то это можно сделать, но даже местные не
+      смогли нам в этом помочь, а по сему это тайна за семью печатями.</p>
+
+    <p>В итоге мы соблазнились и купили экскурсию у отельного гида за 45$ с носа. За это нас покатали 1 минуту на
+      верблюдах, дали попробовать sandboard, устроили довольно клевое сафари по дюнам (где мы даже застряли) и в конце
+      дали много свободного времени, так что мы, сидя на дюне, встретили в уединении закат и еще погуляли немного в
+      темноте. Ну и в конце нас еще покормили и показали шоу, но это не относится к теме.</p>
+
+    <p>Кстати, вот примерные координаты поворота с трассы, если кто захочет прокатиться туда: 25.603287, 55.856207.
+      Просто там довольно заросшая пустыня и найти чисто дюны не так то и просто, а эти ребята специально возят, где
+      покрасивее.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/40.jpg" data-full="./photos/40.jpg" alt="Сафари по дюнам" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/41.jpg" data-full="./photos/41.jpg" alt="Сафари по дюнам" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/42.jpg" data-full="./photos/42.jpg" alt="Сафари по дюнам" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/43.jpg" data-full="./photos/43.jpg" alt="Сафари по дюнам" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/44.jpg" data-full="./photos/44.jpg" alt="Сафари по дюнам" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/45.jpg" data-full="./photos/45.jpg" alt="Сафари по дюнам" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/46.jpg" data-full="./photos/46.jpg" alt="Сафари по дюнам" loading="lazy">
+      </div>
+    </div>
+
+    <p>Итог: дороговато, но интересно. Самому без навыков экстремального вождения такое не организовать.</p>
+
+    <div class="day-heading tight">
+      <div class="day-title">Горы</div>
+    </div>
+
+    <p>В ОАЭ имеется довольно протяженная горная цепь, находящаяся на границе с Оманом, с которым, слава богу, у ОАЭ
+      хорошие отношения.</p>
+
+    <p>Дома мы набросали два трека (по хайкинг-тропам, которые есть на OSM, оба трека шли по погран зоне). Заброситься
+      хотели на такси и потом вызвать такси обратно (ох уж — наивные мы). Один трек был радиальный, другой сквозной. В
+      итоге, когда мы поняли, что с такси тут все плохо, решили съездить только на радиальный маршрут, причем решили
+      договориться с таксистом, чтобы он отвез нас и вернулся потом часов через 6. Долго вели переговоры, в итоге
+      договорились. Однако когда мы подъезжали к началу тропы, дорога начала портиться и таксист очень напрягался, чтобы
+      не поломать ничего, в итоге он сказал, что не поедет сюда еще раз и предложил оплатить ему простой по цене 30 AED
+      за час, с чем мы согласились. Еще, интересный момент был на подъезде, к нам подошли погранцы и начали общаться с
+      водителем, в итоге он сказал, что мы «visitors» и они нас пропустили. Вообще, я заметил, что с безопасностью у них
+      вообще нет проблем, в аэропорту даже не досматривают багаж!! То есть если человек положил в него бомбу с таймером,
+      то все у него получится. Видимо, прецедентов не было.</p>
+
+    <p>В общем, мы угостили нашего водилу (пакистанца) тульским пряником (когда мы шли назад, нам на встречу летел
+      фантик — пакистанцы, чё) и пошли в горы. Тропа проходила на высотах 300-800, горы симпатичные, из далека похожи на
+      песчаник, но на самом деле сплошной камень, тропа проходила по узкому каньону с отвесными стенками, везде бегали
+      козочки, росли экзотические деревья и растения. В итоге, мы дошли до пещерки и пошли назад, так как заложили себе
+      2 часа на это мероприятие. Меньше 4 часов лучше не закладывать.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/50.jpg" data-full="./photos/50.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/51.jpg" data-full="./photos/51.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/52.jpg" data-full="./photos/52.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/53.jpg" data-full="./photos/53.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/54.jpg" data-full="./photos/54.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/55.jpg" data-full="./photos/55.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/56.jpg" data-full="./photos/56.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/57.jpg" data-full="./photos/57.jpg" alt="Горная тропа" loading="lazy"></div>
+    </div>
+
+    <p>На эту поездку у нас ушло 225 AED = 62$, что на самом деле довольно дофига, за 30$ можно найти неплохие
+      экскурсии, отсюда вывод, надо арендовать машину.</p>
+
+    <div class="day-heading tight">
+      <div class="day-title">Вторая поездка в горы</div>
+    </div>
+
+    <p>Во второй раз мы решили посетить руины замка «Queen of Sheba's Palace» (25.818780499150943, 56.03384638416857).
+      Проехали часть пути на автобусе, потом час шли по пригороду Рас-Эль-Хайма, пригород забавный, похож на Индийские
+      трущобы, только с гигантскими расстояниями и без людей.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/60.jpg" data-full="./photos/60.jpg" alt="Руины стен" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/61.jpg" data-full="./photos/61.jpg"
+          alt="Единственное сохранившееся помещение" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/62.jpg" data-full="./photos/62.jpg" alt="Ступени, залитые бетоном"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/63.jpg" data-full="./photos/63.jpg" alt="Козочку жалко" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/64.jpg" data-full="./photos/64.jpg" alt="Наши трофеи" loading="lazy"></div>
+    </div>
+
+    <p>В итоге дошли до руин, и оказалось, что они находятся прямо в начале гор. Далее мы часа 3 гуляли по округе,
+      исследовали сквозные проходы в скалах, искали черепки керамики и просто любовались прекрасным видом на город и
+      море</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/70.jpg" data-full="./photos/70.jpg"
+          alt="Руины замка Queen of Sheba's Palace" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/71.jpg" data-full="./photos/71.jpg"
+          alt="Руины замка Queen of Sheba's Palace" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/72.jpg" data-full="./photos/72.jpg"
+          alt="Руины замка Queen of Sheba's Palace" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/73.jpg" data-full="./photos/73.jpg"
+          alt="Руины замка Queen of Sheba's Palace" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/74.jpg" data-full="./photos/74.jpg"
+          alt="Руины замка Queen of Sheba's Palace" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/75.jpg" data-full="./photos/75.jpg"
+          alt="Руины замка Queen of Sheba's Palace" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/76.jpg" data-full="./photos/76.jpg"
+          alt="Руины замка Queen of Sheba's Palace" loading="lazy"></div>
+    </div>
+
+    <p>Обратно спустя час смогли поймать такси, он назвал цену 25 AED, однако когда мы приехали счетчик насчитал 16 AED,
+      в итоге я ему заплатил 16, а он обиделся.</p>
+
+    <hr>
+
+    <div class="section-title">Итоги</div>
+
+    <p>Очень интересная страна, но немного не оправдала мои ожидания, так как я ожидал более курортную атмосферу.
+      Возвращаться в нее не очень хочется, только если посетить Дубай, либо арендовать тачку и кататься по горам. К
+      сожалению, в городе нет никаких исторических построек, только новострой, причем почему-то очень неприглядный (в
+      Рас-Эль-Хайме).</p>
+
+    <p>P.S. В первом наше походе по горам встретили чувака из Канады/Марокко, он нам сказал, что арендовал машину на 2
+      недели за 500 AED, что в целом не очень дорого. И еще, он меня просветил, что в Оман не нужна виза, однако
+      уточнил, что на арендованной машине туда не попасть, только на автобусе из Дубая.</p>
+
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose">✕</button>
+    <button class="lb-btn lb-prev" id="lbPrev">‹</button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-btn lb-next" id="lbNext">›</button>
+    <div class="lightbox-cap" id="lbCap"></div>
+  </div>
+
+  <script>
+    const thumbs = Array.from(document.querySelectorAll('.thumb img'));
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbCap = document.getElementById('lbCap');
+    let current = 0;
+
+    function openAt(i) {
+      current = (i + thumbs.length) % thumbs.length;
+      const img = thumbs[current];
+      lbImg.src = img.dataset.full || img.src;
+      lbImg.alt = img.alt;
+      lbCap.textContent = img.alt || '';
+      lightbox.classList.add('open');
+    }
+
+    thumbs.forEach((img, i) => {
+      img.parentElement.addEventListener('click', () => openAt(i));
+    });
+
+    document.getElementById('lbClose').addEventListener('click', () => lightbox.classList.remove('open'));
+    document.getElementById('lbPrev').addEventListener('click', () => openAt(current - 1));
+    document.getElementById('lbNext').addEventListener('click', () => openAt(current + 1));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) lightbox.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') lightbox.classList.remove('open');
+      if (e.key === 'ArrowLeft') openAt(current - 1);
+      if (e.key === 'ArrowRight') openAt(current + 1);
+    });
+  </script>
+
+</body>
+
+</html>

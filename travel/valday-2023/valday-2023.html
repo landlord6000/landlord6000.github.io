@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Большая Валдайская Тропа на лыжах</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #E9EDE3;
+      --bg-card: #F5F4EC;
+      --text: #20241C;
+      --muted: #6E7566;
+      --accent: #35606B;
+      --accent2: #6B7D4F;
+      --line: rgba(53, 96, 107, 0.18);
+      --max-w: 760px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 64px 24px 120px;
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-optical-sizing: auto;
+      font-size: clamp(2rem, 5vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 48px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    p {
+      margin: 0 0 20px;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      margin: 56px 0 18px;
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .day-heading {
+      margin: 48px 0 16px;
+    }
+
+    .day-heading.tight {
+      margin: 36px 0 14px;
+    }
+
+    .day-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.6rem;
+    }
+
+    blockquote {
+      margin: 20px 0;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border-left: 3px solid var(--accent);
+      border-radius: 2px;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    blockquote p:last-child {
+      margin-bottom: 0;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 0 0 20px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 48px 0;
+    }
+
+    .caption {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 10px 0 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .caption::before {
+      content: "◆";
+      font-size: 0.6rem;
+      color: var(--accent);
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      margin-bottom: 28px;
+      opacity: 0.7;
+      transition: opacity .2s;
+    }
+
+    .home-link:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .gallery.single {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery.single .thumb {
+      aspect-ratio: 16/10;
+    }
+
+    .thumb {
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      border-radius: 3px;
+      cursor: zoom-in;
+      background: var(--bg-card);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .35s ease;
+    }
+
+    .thumb:hover img {
+      transform: scale(1.06);
+    }
+
+    strong {
+      color: var(--text);
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 17, 12, 0.94);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 40px;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 2px;
+    }
+
+    .lightbox-cap {
+      position: absolute;
+      bottom: 28px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #E9EDE3;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    .lb-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #E9EDE3;
+      font-size: 2.4rem;
+      cursor: pointer;
+      padding: 12px 18px;
+      opacity: 0.7;
+      transition: opacity .2s;
+      font-family: serif;
+      line-height: 1;
+    }
+
+    .lb-btn:hover {
+      opacity: 1;
+    }
+
+    .lb-prev {
+      left: 6px;
+    }
+
+    .lb-next {
+      right: 6px;
+    }
+
+    .lb-close {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: #E9EDE3;
+      font-size: 1.8rem;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .lb-close:hover {
+      opacity: 1;
+    }
+
+    @media (max-width:600px) {
+      .wrap {
+        padding: 40px 16px 90px;
+      }
+
+      .lb-btn {
+        font-size: 1.8rem;
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <a href="../../index.html" class="home-link">← на главную</a>
+
+    <h1>Большая Валдайская Тропа на лыжах</h1>
+    <div class="subtitle">Лыжный поход · 01.2023 · 27 км</div>
+
+    <p>… в дождь. Да, это было известно изначально, однако мы не придали этому большого значения. Итак, за две недели до
+      нового года мы решили отпраздновать его в лесу, а так как заодно с новым годом всем дарится целых 9 выходных,
+      возникло желание уехать подальше и залезть поглубже, БВТ для этого отлично подходит. Изначально план был такой:
+      приехать 31-ого декабря в 12 часов на Валдай, пройти тропу за 4 дня, 4-ого вечером заселиться на Валдае в
+      квартиру, посмотреть город и 5-ого в 23:30 уже быть в Москве, но как оказалось, этот план был полностью обречен,
+      тому было две причины: первая уже была названа - дождь, вторая - лыжи)), но обо всем по порядку.</p>
+
+    <p><strong>Трек:</strong> <a href="https://nakarte.me/#m=15/57.84116/33.10490&l=O&nktl=72Jw-bo7BjrcpU10KzfMnA"
+        target="_blank" rel="noopener">nakarte.me</a></p>
+
+    <hr>
+
+    <div class="day-heading">
+      <div class="day-title">31 декабря</div>
+    </div>
+
+    <p>Итак, встав в 3 часа утра, и сменив две ласточки, в 12 часов мы оказываемся на ЖД вокзале города Валдай, вокруг
+      гололед, около нулевая температура, с лыжами мы выглядим довольно нелепо, однако все равно выдвигаемся к началу
+      тропы, от вокзала туда топать около 2.5 км.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/00.jpg" data-full="./photos/00.jpg" alt="" loading="lazy"></div>
+    </div>
+
+    <p>Первые километры идутся неплохо, снег довольно рыхлый, едется не очень, зато слабее проскальзывает, когда лезешь
+      в горку.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/10.jpg" data-full="./photos/10.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/11.jpg" data-full="./photos/11.jpg" alt="" loading="lazy"></div>
+    </div>
+
+    <p>Доходим до знака «Большая Валдайская Тропа», уже смеркается, а позади чуть больше половины маршрута, мы уже
+      начинаем уставать, лыжи начинают сильно проскальзывать, приходится их намазать. Уже хотим вставать около часовни
+      «Параскевы Пятницы», однако находим в себе силы и ползем дальше, часа через два с половиной доходим наконец до
+      стоянки на озере Находно. На стоянке обнаруживаем закопанные в снег дрова, откапываем их, и разводим костер
+      (оказывается, такие дрова отлично горят, нам даже не потребовался хворост).</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/20.jpg" data-full="./photos/20.jpg" alt="" loading="lazy"></div>
+    </div>
+
+    <p>Готовим ужин, новогодний салат и глинтвейн, пытаемся досидеть до 00:00, однако у нас ничего не получается и мы
+      засыпаем в пол двенадцатого. В полночь я просыпаюсь от очень сильных хлопков, оказывается, мы расположились рядом
+      с домиками, где люди встречают новый год. В итоге после трех салютов, нам все-таки дают поспать.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/30.jpg" data-full="./photos/30.jpg" alt="" loading="lazy"></div>
+    </div>
+
+    <p>В итоге, ходовое время около 6.5 часов, пройдено 11 км.</p>
+
+    <div class="day-heading tight">
+      <div class="day-title">1 января</div>
+    </div>
+
+    <p>Просыпаемся мы в 10:30 и это оказалось фатальной ошибкой, так как по итогу мы пропускаем очень много светового
+      времени. Дров осталось еще много, поэтому спокойно готовим завтрак, греемся. Внезапно к нашей стоянке подъезжает
+      машина, из нее выходит человек и направляется к нам, оказалось, что мужик просто хочет с друзьями пожарить
+      шашлыки. Мы собираемся и выходим в пол второго.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/40.jpg" data-full="./photos/40.jpg" alt="" loading="lazy"></div>
+    </div>
+
+    <p>В лесу очень густой туман и практически сразу после нашего выхода начинает моросить, пока это даже не напрягает.
+      Проходим по лесным тропам, и в итоге выходим на буранку, это открытое место, дождь уже начинает напрягать, привалы
+      становятся дискомфортными. По буранке мы идем около 2 км, дальше начинается тропежка (пока еще по хорошей просеке)
+      и не прекращается вплоть до стоянки.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/50.jpg" data-full="./photos/50.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/51.jpg" data-full="./photos/51.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/52.jpg" data-full="./photos/52.jpg" alt="" loading="lazy"></div>
+    </div>
+
+    <p>Обед мы решаем делать в укрытие от непогоды, дойдя до него понимаем, что мы насквозь сырые и нам очень холодно.
+      Перекусываем, и отправляемся дальше. Сходим с просеки на лесную тропу, смеркается, мы очень мокрые и силы начинают
+      заканчиваться, тут начинается самый неприятный участок маршрута, а именно очень крутые холмы. Тропа рассчитана на
+      пешее прохождение, и для пешехода эти холмы скорее покажутся увлекательными, но не для нас. Во-первых, подняться
+      почти на любую горку в лыжах сложно, так что иногда даже приходилось их снимать, во-вторых, снег все еще рыхлый и
+      идется тяжело что в верх, что в низ, в третьих, как я уже писал выше, везде тропежка. В итоге в конце этих горок
+      решаем идти без лыж, это оказывается значительно быстрее, но вскоре выходим на более менее ровный участок,
+      надеваем лыжи и едем… не туда, да, ошибаемся и выезжаем к озеру не в том месте, немного плутаем и наконец выходим
+      к стоянке, на часах 21:15.</p>
+
+    <p>Тут нас ждем разочарование, на стоянке совершенно нет дров, в итоге решаем готовить на костровой сетке, я собираю
+      супер мокрые палочки (да, дождь еще идет) со всех окрестных ёлок, в итоге с божьей помощью разжигаем костер и
+      готовим еду. Едим в палатке и вообще стараемся по минимуму выходить из нее, так как нам очень холодно. Однако, в
+      палатке тоже все очень плохо, так как у нас мокрое почти все: спальники, пуховка, носки, ботинки… Засыпаем в этом
+      замечательном болоте и спим до 9:00 2 января.</p>
+
+    <p>В итоге, ходовое время около 7 часов, пройдено 13 км.</p>
+
+    <div class="day-heading tight">
+      <div class="day-title">2 января</div>
+    </div>
+
+    <p>Самый ужасный момент всего похода, начнем с того, что мы забыли открыть вентиляцию, поэтому все спальники
+      оказались мокрые. Продолжим тем, что сегодня у нас «минус», а это значит, что замерзло все, что было мокрым), то
+      есть все)). И так, вылезаю из спальника, надеваю ледяные штаны, ледяной анорак, ледяную пуховку, ледяные носки,
+      бью ледяные ботинки об пол, чтобы они перестали быть каменными, и упаковываю ноги в ледяные бахилы. Не
+      отчаиваемся, разжигаем костер из уже ледяных дров, тут выходит солнышко, немного поднимая нам настроение, это не
+      очень спасает, так как нас пронизывает в прямом смысле леденящий холод.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/60.jpg" data-full="./photos/60.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/61.jpg" data-full="./photos/61.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/62.jpg" data-full="./photos/62.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/63.jpg" data-full="./photos/63.jpg" alt="" loading="lazy"></div>
+    </div>
+
+    <p>А вишенкой на торте оказывается то, что вся земля покрыта настом, который начал образовываться еще вчера вечером,
+      но тогда он проламывался под нами, теперь же он больше походил на горки в Колвице, только там это было связано с
+      тем, что снег сдувался сильными ветрами. Мы отважно пошли по этому насту, прошли 800 метров и поняли, что это
+      конец, так как за 2 дня по ± нормальному снегу мы прошли чуть больше трети тропы (а должны были половину), что нам
+      очень холодно и мы устали. В итоге в деревне миробудицы мы вызвали «Газель» и уехали на Валдай.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/70.jpg" data-full="./photos/70.jpg" alt="" loading="lazy"></div>
+    </div>
+
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose">✕</button>
+    <button class="lb-btn lb-prev" id="lbPrev">‹</button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-btn lb-next" id="lbNext">›</button>
+    <div class="lightbox-cap" id="lbCap"></div>
+  </div>
+
+  <script>
+    const thumbs = Array.from(document.querySelectorAll('.thumb img'));
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbCap = document.getElementById('lbCap');
+    let current = 0;
+
+    function openAt(i) {
+      current = (i + thumbs.length) % thumbs.length;
+      const img = thumbs[current];
+      lbImg.src = img.dataset.full || img.src;
+      lbImg.alt = img.alt;
+      lbCap.textContent = img.alt || '';
+      lightbox.classList.add('open');
+    }
+
+    thumbs.forEach((img, i) => {
+      img.parentElement.addEventListener('click', () => openAt(i));
+    });
+
+    document.getElementById('lbClose').addEventListener('click', () => lightbox.classList.remove('open'));
+    document.getElementById('lbPrev').addEventListener('click', () => openAt(current - 1));
+    document.getElementById('lbNext').addEventListener('click', () => openAt(current + 1));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) lightbox.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') lightbox.classList.remove('open');
+      if (e.key === 'ArrowLeft') openAt(current - 1);
+      if (e.key === 'ArrowRight') openAt(current + 1);
+    });
+  </script>
+
+</body>
+
+</html>

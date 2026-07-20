@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Путешествие по югу Карелии</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #E9EDE3;
+      --bg-card: #F5F4EC;
+      --text: #20241C;
+      --muted: #6E7566;
+      --accent: #35606B;
+      --accent2: #6B7D4F;
+      --line: rgba(53, 96, 107, 0.18);
+      --max-w: 760px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 64px 24px 120px;
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-optical-sizing: auto;
+      font-size: clamp(2rem, 5vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 48px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    p {
+      margin: 0 0 20px;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      margin: 56px 0 18px;
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .day-heading {
+      margin: 64px 0 20px;
+    }
+
+    .day-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.6rem;
+    }
+
+    blockquote {
+      margin: 20px 0;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border-left: 3px solid var(--accent);
+      border-radius: 2px;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    blockquote p:last-child {
+      margin-bottom: 0;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 0 0 20px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 48px 0;
+    }
+
+    .caption {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 10px 0 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .caption::before {
+      content: "◆";
+      font-size: 0.6rem;
+      color: var(--accent);
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      margin-bottom: 28px;
+      opacity: 0.7;
+      transition: opacity .2s;
+    }
+
+    .home-link:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .gallery.single {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery.single .thumb {
+      aspect-ratio: 16/10;
+    }
+
+    .thumb {
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      border-radius: 3px;
+      cursor: zoom-in;
+      background: var(--bg-card);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .35s ease;
+    }
+
+    .thumb:hover img {
+      transform: scale(1.06);
+    }
+
+    strong {
+      color: var(--text);
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 17, 12, 0.94);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 40px;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 2px;
+    }
+
+    .lightbox-cap {
+      position: absolute;
+      bottom: 28px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: #E9EDE3;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    .lb-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #E9EDE3;
+      font-size: 2.4rem;
+      cursor: pointer;
+      padding: 12px 18px;
+      opacity: 0.7;
+      transition: opacity .2s;
+      font-family: serif;
+      line-height: 1;
+    }
+
+    .lb-btn:hover {
+      opacity: 1;
+    }
+
+    .lb-prev {
+      left: 6px;
+    }
+
+    .lb-next {
+      right: 6px;
+    }
+
+    .lb-close {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: #E9EDE3;
+      font-size: 1.8rem;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .lb-close:hover {
+      opacity: 1;
+    }
+
+    @media (max-width:600px) {
+      .wrap {
+        padding: 40px 16px 90px;
+      }
+
+      .lb-btn {
+        font-size: 1.8rem;
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <a href="../../index.html" class="home-link">← на главную</a>
+
+    <h1>Путешествие по югу Карелии</h1>
+    <div class="subtitle">поход · 08.2023 · 72 км</div>
+
+    <p>В Карелии я был всего один раз, и то в детстве на коммерческом сплаве, меня тогда очень впечатлили озера и реки,
+      казалось, что мы плаваем по одному большому озеру мимо островков. Наверное примерно так оно и было, в любом
+      случае, мне хотелось туда вернуться в сознательном возрасте, однако, в сплавах я ничего не понимаю, пришлось идти
+      пешком).</p>
+
+    <p>Маршрут был нагло позаимствован у коммерсов по скудному описанию на их сайте. Рассчитан он был на 6 дней с
+      суммарным километражом в 72 км. Так как я абсолютно не представлял ни состояние тропы, не ландшафт, мне
+      показалось, что 12 км/д. в среднем — это нормально, плюс запас времени на непогоду.</p>
+
+    <p><strong>Трек:</strong> <a href="https://nakarte.me/#m=12/61.63870/31.69590&l=O&nktl=YUvtcH5j_qACtK5LjTxEMA"
+        target="_blank" rel="noopener">nakarte.me</a></p>
+
+    <hr>
+
+    <div class="section-title">Логистика 1</div>
+
+    <p>Логистика довольно неудобная, но все находится довольно компактно, поэтому, при наличии связи, можно заказать
+      машину и доехать по дорогам куда угодно. В Сортавалу мы прибыли в 8:30 утра на двухэтажном поезде.</p>
+
+    <blockquote>
+      <p>На август 2023 года на участке Сортавала-Москва курсирует один поезд раз в день, причем он состоит из двух
+        типов вагонов: вагонов Рускеальского экспресса с полным набором вариантов: плацкарт/купэ/СВ и двухэтажных
+        купейных вагонов. У купейных вагонов удобные спальные места, однако места под багаж крайне мало, с большими
+        рюкзаками разместиться затруднительно. Плацкарт Рускеальского экспресса зачем-то укоротил полки и мне при росте
+        180, было очень неудобно спать, ноги вытянуть было невозможно, однако места под багаж куда больше, хотя верхняя
+        багажная полка укороченная.</p>
+    </blockquote>
+
+    <p>Логистика планировалась следующая: Сортавала-Питкяранта: автобус на бла-бла-каре. Питкяранта-Ууксу (старт
+      маршрута) на такси. Бла-бла-кар нас обманул и довез до мемориала «Крест Скорби», где мы прискорбно обнаружили, что
+      у Теле2 нет связи, в итоге такси заказывали через человека, который остановился на обочине.</p>
+
+    <p><strong>Рабочие такси в окрестности Сортавалы:</strong></p>
+    <ul>
+      <li>Такси Пчелка: 89114130482</li>
+      <li>Такси Феникс: 88143345060</li>
+    </ul>
+
+    <p>Вывод такой: из Сортавалы к месту старта кроме как на такси доехать не на чем, автобус и электричка уходят в 3
+      часа дня, что неудобно.</p>
+
+    <hr>
+
+    <div class="section-title">Маршрут</div>
+
+    <p>По началу лес показался нам похожим на подмосковье, однако после часа ходьбы мы окунулись в настоящий Карельский
+      лес со всеми его прелестями, а именно с кучей ягод и грибов. В конце августа в тех местах огромное количество
+      черники, брусники и голубики, одно это уже делает маршрут очень приятным для прохождения. Однако мы встретили
+      большое число змей, советую взять антидот от яда гадюки. Также можно отметить, что лес в тех местах в основном
+      сосновый, причем довольно низкий, с низким кустарничком и мхом, что делает его светлым и дружелюбным.</p>
+
+    <p>Трек со всеми комментариями по отдельным участкам лежит на диске (открыть можно в nakarte.me).</p>
+
+    <p>В целом, маршрут почти полностью проходит по автомобильным лесным дорогам, что делает его прекрасно проезжаемым
+      на велосипеде, есть всего два участка, где придется спешиться, однако, они короткие. На маршруте есть много мест
+      для кемпинга, почти все они были заняты местными отдыхающими.</p>
+
+    <hr>
+
+    <!-- ДЕНЬ 1 -->
+    <div class="day-heading">
+      <div class="day-title">День первый</div>
+    </div>
+
+    <p>В первый день мы стартовали в 12:30 и прошли 10 км. Обедали возле заброшенной ГЭС, потрясающий объект, построен
+      из натурального камня и настолько зарос деревьями и травой, что кажется, что он является частью натурального
+      ландшафта. Первый день полностью шел вдоль реки Уксуньоки, в интернете пишут, что вода в таких реках непригодна
+      для питья, однако у нас не было выбора, и ничего с нами не случилось.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/00.jpg" data-full="./photos/00.jpg" alt="Колодец старой ГЭС" loading="lazy">
+      </div>
+    </div>
+    <div class="caption">Колодец старой ГЭС</div>
+
+    <p>В конце дня был небольшой брод, стоянка оказалась водниковская, около красивого порога «Розовый слон».</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/10.jpg" data-full="./photos/10.jpg" alt="Стоянка первого дня"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/11.jpg" data-full="./photos/11.jpg" alt="Порог «Розовый слон»"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/12.jpg" data-full="./photos/12.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/13.jpg" data-full="./photos/13.jpg" alt="Типичная каша" loading="lazy">
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- ДЕНЬ 2 -->
+    <div class="day-heading">
+      <div class="day-title">День второй</div>
+    </div>
+
+    <p>Во второй день мы прошли 16 км. Начало второго дня было довольно диким, мы шли по затопленной дороге, нашли
+      кустики голубики, далее вышли на заросшую дорогу, немного прошлись вдоль реки Уксуньоки по тропе, в середине дня
+      вышли на обычную дорогу, по которой уже стали кататься туристы, в принципе дальше до трассы Сортавала, мы по ней и
+      шли.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/20.jpg" data-full="./photos/20.jpg" alt="Болотце" loading="lazy"></div>
+    </div>
+    <div class="caption">Болотце</div>
+
+    <p>На обеде искупались в озере Лахнолампи, вода была прохладная. Далее шли по дороге. Наша стоянка оказалась занята,
+      поэтому мы встали просто на берегу озера Ахвенъярви. Место оказалось очень приятным, палатку мы поставили на
+      мягком мху, у озера была черника, голубика и даже совсем зеленая клюква. Придя на стоянку, мы поняли, что нам
+      осталось около 42 км и идти их за 4 дня по такой дороге — очень странная затея, поэтому мы решили ускориться и
+      пройти все за 2 дня, что оказалось хорошей идеей.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/30.jpg" data-full="./photos/30.jpg" alt="Стоянка второго дня"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/31.jpg" data-full="./photos/31.jpg" alt="Стоянка второго дня"
+          loading="lazy"></div>
+    </div>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/40.jpg" data-full="./photos/40.jpg" alt="Брусника" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/41.jpg" data-full="./photos/41.jpg" alt="Голубика" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/42.jpg" data-full="./photos/42.jpg" alt="Черника" loading="lazy"></div>
+    </div>
+
+    <hr>
+
+    <!-- ДЕНЬ 3 -->
+    <div class="day-heading">
+      <div class="day-title">День третий</div>
+    </div>
+
+    <p>Сегодня мы решили идти 21 км, дорога до трассы «Сортавала» была такая же, как и раньше, после трассы был кусочек
+      настоящей тропы, немного поднялись по курумнику, прошли между красивыми озерами, однако вскоре опять вышли на
+      такую же дорогу (на велосипеде можно было бы эту тропу объехать). На подходе к озеру Плотина-Мустоярви (где у нас
+      ночевка) оказался мемориал погибшей роте десантников. Вообще, оказалось, что в тех местах шли серьезные бои во
+      время второй мировой, так что далее мы находили еще несколько мемориалов, а также противотанковое заграждение из
+      камней.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/50.jpg" data-full="./photos/50.jpg" alt="Мемориал погибшей роте десантников"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/51.jpg" data-full="./photos/51.jpg" alt="Мемориал" loading="lazy"></div>
+    </div>
+
+    <p>Стоянка на озере была оборудованной, мы половили рыбу, довольно успешно.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/60.jpg" data-full="./photos/60.jpg" alt="Стоянка третьего дня"
+          loading="lazy"></div>
+    </div>
+    <div class="caption">Стоянка третьего дня</div>
+
+    <hr>
+
+    <!-- ДЕНЬ 4 -->
+    <div class="day-heading">
+      <div class="day-title">День четвёртый</div>
+    </div>
+
+    <p>В начале дня мы вышли на какое-то строящееся шоссе, по нему было идти неприятно, но через несколько километров мы
+      с него ушли на уже привычную лесную дорогу.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/70.jpg" data-full="./photos/70.jpg" alt="Строящаяся дорога" loading="lazy">
+      </div>
+    </div>
+    <div class="caption">Строящаяся дорога</div>
+
+    <p>К вечеру вышли к водопадам «Белые мосты», водопады симпатичные, для туристов оборудовали мостики, столы и навесы,
+      люди там были и вечером, и утром. Заночевали на подходе к водопадам.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/80.jpg" data-full="./photos/80.jpg" alt="Водопад Белые мосты YKSI KUVA"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/81.jpg" data-full="./photos/81.jpg" alt="Водопад Белые мосты KAKSI KUVA"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/82.jpg" data-full="./photos/82.jpg" alt="ОГОНЬ" loading="lazy"></div>
+    </div>
+
+    <p>С утра пытались выехать в Сортавалу, и тут начинается раздел «Логистика 2».</p>
+
+    <hr>
+
+    <div class="section-title">Логистика 2</div>
+
+    <p>План был такой: взять такси до Питкяранты, оттуда уехать на электричке в 12:00 в Сортавалу, но возникло две
+      проблемы: на Белых мостах нету связи у Теле2 (хотя пишет, что сеть есть), и электричку отменили.</p>
+
+    <p>Итоговая логистика: мы дошли до места, где есть связь (километра 4 по дороге в сторону шоссе), вызывали машину до
+      Питкяранты, оттуда на другой машине доехали, внезапно, до Рускеалы. Да, это в принципе входило в наши планы, но
+      немного не в том порядке. В общем за 800+2000 рублей мы к 3 часам дня оказались на парковке горного парка
+      Рускеала. Тут перед нами встал вопрос, что делать дальше.</p>
+
+    <hr>
+
+    <div class="section-title">Что было дальше?</div>
+
+    <p>Так как мы вышли на 2 дня раньше, у нас были развязаны руки, выбирая между хостелом и платным кемпингом мы
+      внезапно обнаружили на карте OSM бесплатный кемпинг на большущем мраморном карьере прямо напротив понтового
+      горного парка, нас это очень заинтересовало и мы пошли туда. Оказалось, что это действительно большое и красивое
+      озеро с лазурной водой, где люди в основном плавают на сапах и просто отдыхают, мы забрались повыше и встали там
+      лагерем.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/90.jpg" data-full="./photos/90.jpg"
+          alt="Мраморный карьер напротив горного парка" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/91.jpg" data-full="./photos/91.jpg" alt="Лагерь под дождём" loading="lazy">
+      </div>
+    </div>
+
+    <p>Взяв с собой самые ценные вещи, мы пошли в горный парк (20 минут пешком), поглазели на все, что они понастроили,
+      заглянули на ЖД, узнать про поезда в Сортавалу и пошли домой.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/100.jpg" data-full="./photos/100.jpg" alt="Фрагменты горного парка"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/101.jpg" data-full="./photos/101.jpg" alt="Фрагменты горного парка"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/102.jpg" data-full="./photos/102.jpg" alt="Итальянский карьер"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/103.jpg" data-full="./photos/103.jpg" alt="Фрагменты горного парка"
+          loading="lazy"></div>
+    </div>
+
+    <p>Следующий день у нас был уже последний, на вечер были взяты билеты до Москвы. Нам необходимо было доехать на
+      электричке до Сортавалы, погулять по ней и спокойно уехать в Москву. Ночью зарядил дождик и капал весь день, что
+      было не очень приятно, однако не сильно мешало нашим мероприятиям. Перед электричкой (14:10) было время и я
+      попытался прогуляться вокруг карьера, однако вода в нем поднялась и половину дороги затопило.</p>
+
+    <div class="gallery single">
+      <div class="thumb"><img src="./thumbs/110.jpg" data-full="./photos/110.jpg" alt="Затопленная дорога"
+          loading="lazy"></div>
+    </div>
+    <div class="caption">Затопленная дорога</div>
+
+    <p>Затем я слазал на мраморную гору, не нашел там мрамора и спустился обратно. Дальше было без приключений, мы
+      посетили ретро-поезд (вагон ресторан), доехали до Сортавалы, прошлись до Финского кладбища, параллельно осматривая
+      город и вернулись на вокзал. В 20:40 уехали домой.</p>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/130.jpg" data-full="./photos/130.jpg" alt="Ретро-тягач" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/131.jpg" data-full="./photos/131.jpg" alt="Вагон-ресторан" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/132.jpg" data-full="./photos/132.jpg" alt="Ретро-автобус" loading="lazy">
+      </div>
+    </div>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/140.jpg" data-full="./photos/140.jpg"
+          alt="Мужской лицей (рядом похожее здание женского лицея)" loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/141.jpg" data-full="./photos/141.jpg" alt="Дом в стиле Модерн"
+          loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/142.jpg" data-full="./photos/142.jpg" alt="Бывший банк Финляндии"
+          loading="lazy"></div>
+    </div>
+
+    <div class="gallery">
+      <div class="thumb"><img src="./thumbs/150.jpg" data-full="./photos/150.jpg"
+          alt="Антуражное надгробие на финском кладбище" loading="lazy"></div>
+      <div class="thumb"><img src="./thumbs/151.jpg" data-full="./photos/151.jpg" alt="Видимо, могила мэра"
+          loading="lazy">
+      </div>
+      <div class="thumb"><img src="./thumbs/152.jpg" data-full="./photos/152.jpg" alt="Статуя в городском парке"
+          loading="lazy"></div>
+    </div>
+
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose">✕</button>
+    <button class="lb-btn lb-prev" id="lbPrev">‹</button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-btn lb-next" id="lbNext">›</button>
+    <div class="lightbox-cap" id="lbCap"></div>
+  </div>
+
+  <script>
+    const thumbs = Array.from(document.querySelectorAll('.thumb img'));
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbCap = document.getElementById('lbCap');
+    let current = 0;
+
+    function openAt(i) {
+      current = (i + thumbs.length) % thumbs.length;
+      const img = thumbs[current];
+      lbImg.src = img.dataset.full || img.src;
+      lbImg.alt = img.alt;
+      lbCap.textContent = img.alt || '';
+      lightbox.classList.add('open');
+    }
+
+    thumbs.forEach((img, i) => {
+      img.parentElement.addEventListener('click', () => openAt(i));
+    });
+
+    document.getElementById('lbClose').addEventListener('click', () => lightbox.classList.remove('open'));
+    document.getElementById('lbPrev').addEventListener('click', () => openAt(current - 1));
+    document.getElementById('lbNext').addEventListener('click', () => openAt(current + 1));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) lightbox.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') lightbox.classList.remove('open');
+      if (e.key === 'ArrowLeft') openAt(current - 1);
+      if (e.key === 'ArrowRight') openAt(current + 1);
+    });
+  </script>
+
+</body>
+
+</html>
