@@ -126,6 +126,25 @@
       color: var(--accent);
     }
 
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      margin-bottom: 28px;
+      opacity: 0.7;
+      transition: opacity .2s;
+    }
+
+    .home-link:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+
     .gallery {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -264,6 +283,8 @@
 <body>
 
   <div class="wrap">
+
+    <a href="../../index.html" class="home-link">← на главную</a>
 
     <h1>Путешествие по югу Карелии</h1>
     <div class="subtitle">поход · 72 км</div>

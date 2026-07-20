@@ -130,6 +130,25 @@
       color: var(--accent);
     }
 
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      margin-bottom: 28px;
+      opacity: 0.7;
+      transition: opacity .2s;
+    }
+
+    .home-link:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+
     .gallery {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -269,6 +288,8 @@
 
   <div class="wrap">
 
+    <a href="../../index.html" class="home-link">← на главную</a>
+
     <h1>Отчёт о походе по Москворецкому пойменному заказнику</h1>
     <div class="subtitle">ПВД · 9 км</div>
 
@@ -379,8 +400,8 @@
 
     <div class="gallery">
       <div class="thumb"><img src="./photos/6.jpg" alt="Дерево-ориентир" loading="lazy"></div>
-      <div class="thumb"><img src="./photos/7.jpg" alt="Переход по переправе" loading="lazy"></div>
-      <div class="thumb"><img src="./photos/8.jpg" alt="Вид с перправы" loading="lazy"></div>
+      <div class="thumb"><img src="./photos/7.jpg" alt="Переход по плотине 1" loading="lazy"></div>
+      <div class="thumb"><img src="./photos/8.jpg" alt="Переход по плотине 2" loading="lazy"></div>
     </div>
 
     <!-- X8 -->
