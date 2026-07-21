@@ -55,7 +55,7 @@
     .subtitle {
       color: var(--muted);
       font-size: 15px;
-      margin-bottom: 48px;
+      margin-bottom: 24px;
       font-family: 'IBM Plex Mono', monospace;
     }
 
@@ -147,6 +147,45 @@
     .home-link:hover {
       opacity: 1;
       color: var(--accent);
+    }
+
+    /* Source toggle */
+    .source-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 40px;
+      letter-spacing: 0.02em;
+    }
+
+    .source-toggle .pill-group {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .source-toggle button {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      background: transparent;
+      border: none;
+      padding: 5px 12px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: background .15s, color .15s;
+    }
+
+    .source-toggle button.active {
+      background: var(--accent);
+      color: #F5F4EC;
+    }
+
+    .source-toggle button:not(.active):hover {
+      background: var(--bg-card);
     }
 
     .gallery {
@@ -308,6 +347,14 @@
     <h1>Небольшой очерк об ОАЭ (Рас-Эль-Хайма)</h1>
     <div class="subtitle">Поездка · 01.2024</div>
 
+    <!-- <div class="source-toggle" id="sourceToggle">
+      <span>Фото:</span>
+      <div class="pill-group">
+        <button data-src="repo">репо</button>
+        <button data-src="cloudinary">cloudinary</button>
+      </div>
+    </div> -->
+
     <div class="section-title">О месте</div>
 
     <p>Объединенные Арабские Эмираты это небольшая страна на юго-востоке Аравийского полуострова. Климат тут тропический
@@ -315,7 +362,7 @@
       растительность.</p>
 
     <div class="gallery single">
-      <div class="thumb"><img src="./thumbs/00.jpg" data-full="./photos/00.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img data-name="00.jpg" alt="" loading="lazy"></div>
     </div>
 
     <p>Казалось бы, никаких предпосылок для хорошего уровня жизни у этого региона нет, жизнь тут и была не очень то
@@ -359,11 +406,9 @@
       дорогу мы нашли всего одно в городе)) около главного ТЦ.</p>
 
     <div class="gallery">
-      <div class="thumb"><img src="./thumbs/10.jpg" data-full="./photos/10.jpg" alt="" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/11.jpg" data-full="./photos/11.jpg" alt="Куст съел тротуар" loading="lazy">
-      </div>
-      <div class="thumb"><img src="./thumbs/12.jpg" data-full="./photos/12.jpg"
-          alt="Газон есть, а лучше бы сделали тротуар" loading="lazy"></div>
+      <div class="thumb"><img data-name="10.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img data-name="11.jpg" alt="Куст съел тротуар" loading="lazy"></div>
+      <div class="thumb"><img data-name="12.jpg" alt="Газон есть, а лучше бы сделали тротуар" loading="lazy"></div>
     </div>
 
     <p>В нашем городе напрочь отсутствовал транспорт, были только автобусы, однако цена на них была такая же, как на
@@ -380,13 +425,9 @@
       обычных курортах. Это реально просто город.</p>
 
     <div class="gallery">
-      <div class="thumb"><img src="./thumbs/20.jpg" data-full="./photos/20.jpg" alt="Городской пляж" loading="lazy">
-      </div>
-      <div class="thumb"><img src="./thumbs/21.jpg" data-full="./photos/21.jpg" alt="Магазин сладостей" loading="lazy">
-      </div>
-      <div class="thumb"><img src="./thumbs/22.jpg" data-full="./photos/22.jpg" alt="Большая Амурская магистраль"
-          loading="lazy">
-      </div>
+      <div class="thumb"><img data-name="20.jpg" alt="Городской пляж" loading="lazy"></div>
+      <div class="thumb"><img data-name="21.jpg" alt="Магазин сладостей" loading="lazy"></div>
+      <div class="thumb"><img data-name="22.jpg" alt="Большая Амурская магистраль" loading="lazy"></div>
     </div>
 
     <p>Подытожу, как примерно ощущалась жизнь в нашем городке: гулять по улице неприятно, хочется сразу заказать такси,
@@ -432,7 +473,7 @@
 
     <div class="video-wrap">
       <video controls preload="metadata">
-        <source src="./videos/00.mp4" type="video/mp4">
+        <source data-name="00.mp4" type="video/mp4">
       </video>
     </div>
 
@@ -449,7 +490,7 @@
       невероятный.</p>
 
     <div class="gallery single">
-      <div class="thumb"><img src="./thumbs/30.jpg" data-full="./photos/30.jpg" alt="Дюны" loading="lazy"></div>
+      <div class="thumb"><img data-name="30.jpg" alt="Дюны" loading="lazy"></div>
     </div>
 
     <p>Сидя дома на диване и имея билеты туда-обратно в ОАЭ мы строили коварные планы и плели гениальные логистические
@@ -471,20 +512,13 @@
       покрасивее.</p>
 
     <div class="gallery">
-      <div class="thumb"><img src="./thumbs/40.jpg" data-full="./photos/40.jpg" alt="Сафари по дюнам" loading="lazy">
-      </div>
-      <div class="thumb"><img src="./thumbs/41.jpg" data-full="./photos/41.jpg" alt="Сафари по дюнам" loading="lazy">
-      </div>
-      <div class="thumb"><img src="./thumbs/42.jpg" data-full="./photos/42.jpg" alt="Сафари по дюнам" loading="lazy">
-      </div>
-      <div class="thumb"><img src="./thumbs/43.jpg" data-full="./photos/43.jpg" alt="Сафари по дюнам" loading="lazy">
-      </div>
-      <div class="thumb"><img src="./thumbs/44.jpg" data-full="./photos/44.jpg" alt="Сафари по дюнам" loading="lazy">
-      </div>
-      <div class="thumb"><img src="./thumbs/45.jpg" data-full="./photos/45.jpg" alt="Сафари по дюнам" loading="lazy">
-      </div>
-      <div class="thumb"><img src="./thumbs/46.jpg" data-full="./photos/46.jpg" alt="Сафари по дюнам" loading="lazy">
-      </div>
+      <div class="thumb"><img data-name="40.jpg" alt="Сафари по дюнам" loading="lazy"></div>
+      <div class="thumb"><img data-name="41.jpg" alt="Сафари по дюнам" loading="lazy"></div>
+      <div class="thumb"><img data-name="42.jpg" alt="Сафари по дюнам" loading="lazy"></div>
+      <div class="thumb"><img data-name="43.jpg" alt="Сафари по дюнам" loading="lazy"></div>
+      <div class="thumb"><img data-name="44.jpg" alt="Сафари по дюнам" loading="lazy"></div>
+      <div class="thumb"><img data-name="45.jpg" alt="Сафари по дюнам" loading="lazy"></div>
+      <div class="thumb"><img data-name="46.jpg" alt="Сафари по дюнам" loading="lazy"></div>
     </div>
 
     <p>Итог: дороговато, но интересно. Самому без навыков экстремального вождения такое не организовать.</p>
@@ -513,18 +547,19 @@
       козочки, росли экзотические деревья и растения. В итоге, мы дошли до пещерки и пошли назад, так как заложили себе
       2 часа на это мероприятие. Меньше 4 часов лучше не закладывать.</p>
 
-    <p><strong>Трек (южный, и мы ходили по нему, как я понимаю, только на юг):</strong> <a href="https://nakarte.me/#m=16/25.71747/56.12724&l=G&nktl=XTH2iyAl3LHupoM_yqz_Sw"
-        target="_blank" rel="noopener">nakarte.me</a></p>
+    <p><strong>Трек (южный, и мы ходили по нему, как я понимаю, только на юг):</strong> <a
+        href="https://nakarte.me/#m=16/25.71747/56.12724&l=G&nktl=XTH2iyAl3LHupoM_yqz_Sw" target="_blank"
+        rel="noopener">nakarte.me</a></p>
 
     <div class="gallery">
-      <div class="thumb"><img src="./thumbs/50.jpg" data-full="./photos/50.jpg" alt="Горная тропа" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/51.jpg" data-full="./photos/51.jpg" alt="Горная тропа" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/52.jpg" data-full="./photos/52.jpg" alt="Горная тропа" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/53.jpg" data-full="./photos/53.jpg" alt="Горная тропа" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/54.jpg" data-full="./photos/54.jpg" alt="Горная тропа" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/55.jpg" data-full="./photos/55.jpg" alt="Горная тропа" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/56.jpg" data-full="./photos/56.jpg" alt="Горная тропа" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/57.jpg" data-full="./photos/57.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img data-name="50.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img data-name="51.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img data-name="52.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img data-name="53.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img data-name="54.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img data-name="55.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img data-name="56.jpg" alt="Горная тропа" loading="lazy"></div>
+      <div class="thumb"><img data-name="57.jpg" alt="Горная тропа" loading="lazy"></div>
     </div>
 
     <p>На эту поездку у нас ушло 225 AED = 62$, что на самом деле довольно дофига, за 30$ можно найти неплохие
@@ -539,14 +574,11 @@
       трущобы, только с гигантскими расстояниями и без людей.</p>
 
     <div class="gallery">
-      <div class="thumb"><img src="./thumbs/60.jpg" data-full="./photos/60.jpg" alt="Руины стен" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/61.jpg" data-full="./photos/61.jpg"
-          alt="Единственное сохранившееся помещение" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/62.jpg" data-full="./photos/62.jpg" alt="Ступени, залитые бетоном"
-          loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/63.jpg" data-full="./photos/63.jpg" alt="Козочку жалко" loading="lazy">
-      </div>
-      <div class="thumb"><img src="./thumbs/64.jpg" data-full="./photos/64.jpg" alt="Наши трофеи" loading="lazy"></div>
+      <div class="thumb"><img data-name="60.jpg" alt="Руины стен" loading="lazy"></div>
+      <div class="thumb"><img data-name="61.jpg" alt="Единственное сохранившееся помещение" loading="lazy"></div>
+      <div class="thumb"><img data-name="62.jpg" alt="Ступени, залитые бетоном" loading="lazy"></div>
+      <div class="thumb"><img data-name="63.jpg" alt="Козочку жалко" loading="lazy"></div>
+      <div class="thumb"><img data-name="64.jpg" alt="Наши трофеи" loading="lazy"></div>
     </div>
 
     <p>В итоге дошли до руин, и оказалось, что они находятся прямо в начале гор. Далее мы часа 3 гуляли по округе,
@@ -554,13 +586,13 @@
       море</p>
 
     <div class="gallery">
-      <div class="thumb"><img src="./thumbs/70.jpg" data-full="./photos/70.jpg" alt="" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/71.jpg" data-full="./photos/71.jpg" alt="" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/72.jpg" data-full="./photos/72.jpg" alt="" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/73.jpg" data-full="./photos/73.jpg" alt="" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/74.jpg" data-full="./photos/74.jpg" alt="" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/75.jpg" data-full="./photos/75.jpg" alt="" loading="lazy"></div>
-      <div class="thumb"><img src="./thumbs/76.jpg" data-full="./photos/76.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img data-name="70.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img data-name="71.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img data-name="72.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img data-name="73.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img data-name="74.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img data-name="75.jpg" alt="" loading="lazy"></div>
+      <div class="thumb"><img data-name="76.jpg" alt="" loading="lazy"></div>
     </div>
 
     <p>Обратно спустя час смогли поймать такси, он назвал цену 25 AED, однако когда мы приехали счетчик насчитал 16 AED,
@@ -591,6 +623,62 @@
   </div>
 
   <script>
+    // ====== КОНФИГ: поправь под свою структуру в Cloudinary ======
+    const CLOUD_NAME = 'hlhipj9x';      // твой cloud name
+    const CLOUDINARY_FOLDER = 'UAE-2024'; // папка этого похода в Cloudinary, например "rak-2024"
+    // ==============================================================
+
+    function repoUrl(kind, name) {
+      if (kind === 'thumb') return `./thumbs/${name}`;
+      if (kind === 'full') return `./photos/${name}`;
+      if (kind === 'video') return `./videos/${name}`;
+    }
+
+    function cloudinaryUrl(kind, name) {
+      const base = `https://res.cloudinary.com/${CLOUD_NAME}`;
+      if (kind === 'thumb') return `${base}/image/upload/w_800,h_640,c_fill,q_auto,f_auto/${CLOUDINARY_FOLDER}/photos/${name}`;
+      if (kind === 'full') return `${base}/image/upload/w_1600,q_auto,f_auto/${CLOUDINARY_FOLDER}/photos/${name}`;
+      if (kind === 'video') return `${base}/video/upload/q_auto/${CLOUDINARY_FOLDER}/videos/${name}`;
+    }
+
+    function buildUrl(kind, name, source) {
+      return source === 'cloudinary' ? cloudinaryUrl(kind, name) : repoUrl(kind, name);
+    }
+
+    function renderMedia(source) {
+      document.querySelectorAll('.thumb img[data-name]').forEach(img => {
+        const name = img.dataset.name;
+        img.src = buildUrl('thumb', name, source);
+        img.dataset.full = buildUrl('full', name, source);
+      });
+
+      document.querySelectorAll('.video-wrap source[data-name]').forEach(sourceEl => {
+        const name = sourceEl.dataset.name;
+        sourceEl.src = buildUrl('video', name, source);
+        sourceEl.closest('video').load();
+      });
+    }
+
+    function setActiveButton(source) {
+      document.querySelectorAll('#sourceToggle button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.src === source);
+      });
+    }
+
+    const savedSource = localStorage.getItem('imgSource') || 'repo';
+    renderMedia(savedSource);
+    setActiveButton(savedSource);
+
+    document.querySelectorAll('#sourceToggle button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const source = btn.dataset.src;
+        localStorage.setItem('imgSource', source);
+        renderMedia(source);
+        setActiveButton(source);
+      });
+    });
+
+    // Lightbox (работает поверх уже отрендеренных src/data-full)
     const thumbs = Array.from(document.querySelectorAll('.thumb img'));
     const lightbox = document.getElementById('lightbox');
     const lbImg = document.getElementById('lbImg');
