@@ -200,7 +200,15 @@
     }
 
     .gallery.single .thumb {
-      aspect-ratio: 16/10;
+      aspect-ratio: auto;
+      background: none;
+    }
+
+    .gallery.single .thumb img {
+      width: 100%;
+      height: auto;
+      max-height: 70vh;
+      object-fit: contain;
     }
 
     .thumb {
@@ -347,7 +355,8 @@
     <h1>Небольшой очерк об ОАЭ (Рас-Эль-Хайма)</h1>
     <div class="subtitle">Поездка · 01.2024</div>
 
-    <!-- <div class="source-toggle" id="sourceToggle">
+    <!-- 
+    <div class="source-toggle" id="sourceToggle">
       <span>Фото:</span>
       <div class="pill-group">
         <button data-src="repo">репо</button>
