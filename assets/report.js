@@ -119,4 +119,37 @@
       wrap.appendChild(nav);
     }
   }
+
+  /* ---------- 4. Тихий прелоад полноразмерных фото ---------- */
+  if (thumbs.length > 0) {
+    const BATCH_SIZE = 2;    // сколько фото грузим параллельно
+    const BATCH_DELAY = 300; // пауза между пачками, мс
+
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const isSlow = conn && (conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g' || conn.effectiveType === '3g');
+
+    if (!isSlow) {
+      const urls = thumbs
+        .map((img) => img.dataset.full)
+        .filter(Boolean);
+
+      let index = 0;
+
+      const loadNextBatch = () => {
+        if (index >= urls.length) return;
+
+        urls.slice(index, index + BATCH_SIZE).forEach((url) => {
+          const img = new Image();
+          img.src = url;
+        });
+
+        index += BATCH_SIZE;
+        setTimeout(loadNextBatch, BATCH_DELAY);
+      };
+
+      window.addEventListener('load', () => {
+        setTimeout(loadNextBatch, 1000);
+      });
+    }
+  }
 })();
