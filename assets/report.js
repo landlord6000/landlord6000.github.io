@@ -24,23 +24,29 @@
     lbImg.alt = img.alt;
     lbCap.textContent = img.alt || '';
     lightbox.classList.add('open');
+    document.body.classList.add('lb-locked');
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.classList.remove('lb-locked');
   }
 
   thumbs.forEach((img, i) => {
     img.parentElement.addEventListener('click', () => openAt(i));
   });
 
-  document.getElementById('lbClose').addEventListener('click', () => lightbox.classList.remove('open'));
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
   document.getElementById('lbPrev').addEventListener('click', () => openAt(current - 1));
   document.getElementById('lbNext').addEventListener('click', () => openAt(current + 1));
 
   lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) lightbox.classList.remove('open');
+    if (e.target === lightbox) closeLightbox();
   });
 
   document.addEventListener('keydown', (e) => {
     if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') lightbox.classList.remove('open');
+    if (e.key === 'Escape') closeLightbox();
     if (e.key === 'ArrowLeft') openAt(current - 1);
     if (e.key === 'ArrowRight') openAt(current + 1);
   });

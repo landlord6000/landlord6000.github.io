@@ -216,6 +216,10 @@ a {
   display: flex;
 }
 
+body.lb-locked {
+  overflow: hidden;
+}
+
 .lightbox img {
   max-width: 90vw;
   max-height: 82vh;
