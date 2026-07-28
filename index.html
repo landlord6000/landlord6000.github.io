@@ -15,7 +15,7 @@
   <meta name="robots" content="index, follow">
   <!-- Open Graph — превью при шаринге в соцсетях/мессенджерах -->
   <meta property="og:site_name" content="Отчёты о походах">
-  <meta property="og:title" content="Отчёты о походах и поездках: Карелия, ОАЭ, Валдай, Москворецкий заказник">
+  <meta property="og:title" content="Отчёты о походах и поездках">
   <meta property="og:description"
     content="Отчёты о походах и поездках: Карелия, ОАЭ, Валдай, Москворецкий заказник. Маршруты, фото, впечатления.">
   <meta property="og:url" content="https://landlord6000.github.io/">
@@ -40,7 +40,7 @@
       --accent: #35606B;
       --accent2: #6B7D4F;
       --line: rgba(53, 96, 107, 0.18);
-      --max-w: 640px;
+      --max-w: 760px;
     }
 
     * {
@@ -60,7 +60,7 @@
     .wrap {
       max-width: var(--max-w);
       margin: 0 auto;
-      padding: 96px 24px 64px;
+      padding: 72px 24px 64px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -76,13 +76,104 @@
       margin: 0 0 12px;
     }
 
-    .subtitle {
-      color: var(--muted);
-      font-size: 15px;
-      font-family: 'IBM Plex Mono', monospace;
+    /* Шапка: фото-из-случайного-отчёта + текст об авторе */
+    .intro {
+      margin-top: 36px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
       margin-bottom: 56px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid var(--line);
     }
 
+    .intro-photo-block {
+      flex: 0 0 auto;
+      width: 392px;
+    }
+
+    .intro-photo {
+      display: block;
+      width: 392px;
+      height: 392px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+
+    .intro-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .intro-photo-caption {
+      display: block;
+      margin-top: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.76rem;
+      line-height: 1.35;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .intro-photo-caption:hover {
+      color: var(--accent);
+    }
+
+    .intro-text {
+      flex: 1 1 auto;
+      min-width: 0;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .intro-greeting {
+      margin: 0;
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--text);
+    }
+
+    .intro-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .intro-body p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--accent);
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 14px;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease;
+      align-self: flex-start;
+    }
+
+    .contact-btn:hover {
+      background: #fff;
+      border-color: var(--accent);
+    }
+
+    /* Список отчётов */
     .travel {
       list-style: none;
       margin: 0;
@@ -140,12 +231,55 @@
       color: var(--accent);
       border-color: var(--accent);
     }
+
+    @media (max-width: 640px) {
+      .intro {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .intro-photo-block {
+        width: 100%;
+      }
+
+      .intro-photo {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .intro-body p {
+        font-size: 14.5px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <h1>Отчёты о походах и поездках</h1>
+    <h1>Отчёты о поездках и походах</h1>
+
+    <div class="intro">
+      <div class="intro-photo-block">
+        <a class="intro-photo" id="introPhotoLink" href="#" aria-label="Случайное фото из отчёта">
+          <img id="introPhotoImg" src="" alt="" loading="lazy">
+        </a>
+        <a class="intro-photo-caption" id="introPhotoCaption" href="#"></a>
+      </div>
+      <div class="intro-text">
+        <p class="intro-greeting">Приветствую!</p>
+        <div class="intro-body">
+          <p>На этом сайте я публикую отчёты о своих походах и поездках.</p>
+          <p>В материалах я стараюсь не только передать личные впечатления, но и рассказать (и показать)
+            о сложных участках маршрутов, так же я делюсь GPS-треками, разбираю логистику и прочие интересные вещи.</p>
+          <p>Надеюсь, эти отчёты будут полезны при подготовке к вашим собственным путешествиям. Если у вас возникнут
+            вопросы по технической части или маршрутам — буду рад ответить.</p>
+        </div>
+        <button class="contact-btn" id="contactBtn" type="button">✉ Написать мне</button>
+      </div>
+    </div>
 
     <ul class="travel">
       <li>
@@ -178,6 +312,62 @@
       <a href="dnd/">Подвальчик DnD →</a>
     </footer>
   </div>
+
+  <!-- Данные о фото генерируются скриптом generate_photos_data.py, см. photos.js -->
+  <script src="photos.js"></script>
+  <script>
+    if (typeof ALL_PHOTOS !== 'undefined' && ALL_PHOTOS.length) {
+      const pick = ALL_PHOTOS[Math.floor(Math.random() * ALL_PHOTOS.length)];
+      const imgEl = document.getElementById('introPhotoImg');
+      const linkEl = document.getElementById('introPhotoLink');
+      const captionEl = document.getElementById('introPhotoCaption');
+
+      imgEl.src = pick.img;
+      imgEl.alt = pick.title;
+      linkEl.href = pick.link;
+      linkEl.setAttribute('aria-label', pick.title);
+
+      captionEl.href = pick.link;
+      captionEl.textContent = pick.title;
+    }
+
+    // Почта собирается на клиенте из частей, чтобы не лежать в HTML
+    // открытым текстом (базовая защита от простых email-парсеров).
+    // По клику — копируем адрес в буфер обмена и показываем всплывающую подсказку.
+    (function () {
+      const user = 'crazymadman18';
+      const domain = 'gmail.com';
+      const email = user + '@' + domain;
+      const btn = document.getElementById('contactBtn');
+      const originalLabel = btn.textContent;
+      let hideTimer = null;
+
+      function showCopied() {
+        clearTimeout(hideTimer);
+        btn.textContent = '✓ Скопировано';
+        hideTimer = setTimeout(() => {
+          btn.textContent = originalLabel;
+        }, 1600);
+      }
+
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(email);
+        } catch (e) {
+          // Фоллбэк для браузеров без Clipboard API / без HTTPS
+          const tmp = document.createElement('textarea');
+          tmp.value = email;
+          tmp.style.position = 'fixed';
+          tmp.style.opacity = '0';
+          document.body.appendChild(tmp);
+          tmp.select();
+          document.execCommand('copy');
+          document.body.removeChild(tmp);
+        }
+        showCopied();
+      });
+    })();
+  </script>
 </body>
 
 </html>
