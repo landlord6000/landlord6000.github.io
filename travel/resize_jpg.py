@@ -1,7 +1,7 @@
 from pathlib import Path
 from PIL import Image
 
-# Корневая папка с отчетами
+# Корневая папка с отчётами
 ROOT = Path(r"E:\GitHub\landlord6000.github.io\travel")      # <-- измени на свою
 
 # Максимальный размер длинной стороны
