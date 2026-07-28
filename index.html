@@ -90,6 +90,12 @@
     .intro-photo-block {
       flex: 0 0 auto;
       width: 392px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .intro-photo-block.is-loaded {
+      opacity: 1;
     }
 
     .intro-photo {
@@ -263,7 +269,7 @@
 
 <body>
   <div class="wrap">
-    <h1>Отчёты о походах и поездках</h1>
+    <h1>Отчёты о поездках и походах</h1>
 
     <div class="intro">
       <div class="intro-photo-block">
@@ -325,6 +331,17 @@
       const imgEl = document.getElementById('introPhotoImg');
       const linkEl = document.getElementById('introPhotoLink');
       const captionEl = document.getElementById('introPhotoCaption');
+      const blockEl = document.querySelector('.intro-photo-block');
+
+      // Показываем фото и подпись только когда картинка реально
+      // догрузилась, чтобы не мелькал пустой бокс с подписью на нём.
+      imgEl.addEventListener('load', () => {
+        blockEl.classList.add('is-loaded');
+      });
+      imgEl.addEventListener('error', () => {
+        // Даже если фото не загрузилось, не оставляем пустой бокс висящим вечно
+        blockEl.classList.add('is-loaded');
+      });
 
       imgEl.src = pick.img;
       imgEl.alt = pick.title;
