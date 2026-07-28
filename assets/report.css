@@ -1,36 +1,23 @@
 /* ============================================================
-   Общие стили для страниц отчётов о походах
-   Подключается на каждой странице так:
+   Стили для страниц отчётов о походах.
+   Подключается на каждой странице ПОСЛЕ base.css:
+
+   <link rel="stylesheet" href="../../assets/base.css">
    <link rel="stylesheet" href="../../assets/report.css">
+
+   base.css — общие для всего сайта переменные, сброс и базовая
+   типографика (те же, что использует главная страница).
+   Здесь — то, что специфично именно для страниц отчётов
+   (line-height текста, размеры h1, .wrap с длинными отступами
+   под нижнюю кнопку "наверх", вёрстка галерей, лайтбокс и т.д.)
 
    На самой странице в <style> остаются только уникальные для
    неё вещи — например, отступы .day-heading, если конкретному
    отчёту нужны другие интервалы между днями.
    ============================================================ */
 
-:root {
-  --bg: #E9EDE3;
-  --bg-card: #F5F4EC;
-  --text: #20241C;
-  --muted: #6E7566;
-  --accent: #35606B;
-  --accent2: #6B7D4F;
-  --line: rgba(53, 96, 107, 0.18);
-  --max-w: 760px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 17px;
   line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
 }
 
 .wrap {
@@ -40,12 +27,8 @@ body {
 }
 
 h1 {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-optical-sizing: auto;
   font-size: clamp(2rem, 5vw, 2.9rem);
   line-height: 1.1;
-  letter-spacing: -0.01em;
   margin: 0 0 8px;
 }
 
