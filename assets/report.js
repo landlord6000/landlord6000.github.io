@@ -263,6 +263,7 @@
         inFlight.forEach((controller, url) => {
           controller.abort();
           requestedFull.delete(url);
+          queue.unshift(url); // возвращаем в начало очереди
         });
         inFlight.clear();
         active = 0;
