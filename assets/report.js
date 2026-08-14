@@ -25,6 +25,7 @@
      чтобы прелоад мог пропускать то, что уже стартовало по клику. */
   const requestedFull = new Set();
   let lightboxIsOpen = false;
+  let resumePreload = () => { }; // section 4 переопределит после инициализации
 
   if (lightbox && thumbs.length > 0) {
     const lbImg = document.getElementById('lbImg');
@@ -112,6 +113,7 @@
       lightbox.classList.remove('open');
       document.body.classList.remove('lb-locked');
       lightboxIsOpen = false;
+      resumePreload(); // освободили полосу — фоновый прелоад можно продолжать
     };
 
     thumbs.forEach((img, i) => {
@@ -196,9 +198,8 @@
 
   /* ---------- 4. Тихий прелоад полноразмерных фото ---------- */
   if (thumbs.length > 0) {
-    const BATCH_SIZE = 2;    // сколько фото грузим параллельно
-    const BATCH_DELAY = 300; // пауза между пачками, мс
-    const PAUSE_CHECK_DELAY = 250; // как часто перепроверять, не открыт ли лайтбокс
+    const MAX_CONCURRENT = 2; // сколько фото грузим одновременно — по-настоящему,
+    // не по таймеру, а по факту свободного слота
 
     const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     const isSlow = conn && (conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g' || conn.effectiveType === '3g');
@@ -209,31 +210,32 @@
         .filter(Boolean);
 
       let index = 0;
+      let active = 0;
 
-      const loadNextBatch = () => {
-        if (index >= urls.length) return;
+      const pump = () => {
+        if (lightboxIsOpen) return; // возобновится сама через resumePreload() при закрытии
 
-        /* Пока человек смотрит фото в лайтбоксе — не отбираем у него
-           полосу пропускания фоновыми запросами, просто ждём. */
-        if (lightboxIsOpen) {
-          setTimeout(loadNextBatch, PAUSE_CHECK_DELAY);
-          return;
-        }
-
-        urls.slice(index, index + BATCH_SIZE).forEach((url) => {
-          if (requestedFull.has(url)) return; // уже загружено/грузится по клику
+        while (active < MAX_CONCURRENT && index < urls.length) {
+          const url = urls[index++];
+          if (requestedFull.has(url)) continue; // уже грузится/загружено по клику
           requestedFull.add(url);
+
+          active++;
           const img = new Image();
           if ('fetchPriority' in img) img.fetchPriority = 'low';
+          const done = () => {
+            active--;
+            pump(); // слот освободился — сразу берём следующее фото
+          };
+          img.onload = done;
+          img.onerror = done;
           img.src = url;
-        });
-
-        index += BATCH_SIZE;
-        setTimeout(loadNextBatch, BATCH_DELAY);
+        }
       };
 
+      resumePreload = pump;
       window.addEventListener('load', () => {
-        setTimeout(loadNextBatch, 1000);
+        setTimeout(pump, 1000);
       });
     }
   }
