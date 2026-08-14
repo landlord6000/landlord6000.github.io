@@ -23,16 +23,75 @@
   if (lightbox && thumbs.length > 0) {
     const lbImg = document.getElementById('lbImg');
     const lbCap = document.getElementById('lbCap');
+    const lbPrevBtn = document.getElementById('lbPrev');
+    const lbNextBtn = document.getElementById('lbNext');
     let current = 0;
 
-    const openAt = (i) => {
-      current = (i + thumbs.length) % thumbs.length;
-      const img = thumbs[current];
-      lbImg.src = img.dataset.full || img.src;
-      lbImg.alt = img.alt;
-      lbCap.textContent = img.alt || '';
+    /* Границы "своей" галереи для индекса — чтобы при пролистывании
+       не уезжать в фотографии соседней .gallery на той же странице. */
+    const galleryBounds = (index) => {
+      const galleryEl = thumbs[index].closest('.gallery');
+      let start = index;
+      let end = index;
+      while (start - 1 >= 0 && thumbs[start - 1].closest('.gallery') === galleryEl) start--;
+      while (end + 1 < thumbs.length && thumbs[end + 1].closest('.gallery') === galleryEl) end++;
+      return { start, end };
+    };
+
+    const render = () => {
+      const target = thumbs[current];
+      const thumbSrc = target.src;               // уже загружено (это же превью в галерее)
+      const fullSrc = target.dataset.full || thumbSrc;
+      const alt = target.alt;
+
+      /* Показываем то, что уже есть (превью), сразу — вместе с новой
+         подписью. Полноразмерное фото подменяем, когда оно догрузится,
+         чтобы не висела старая фотка под новым заголовком. */
+      lbImg.src = thumbSrc;
+      lbImg.alt = alt;
+      lbCap.textContent = alt || '';
       lightbox.classList.add('open');
       document.body.classList.add('lb-locked');
+
+      if (fullSrc !== thumbSrc) {
+        lbImg.classList.add('lb-loading');
+        const loader = new Image();
+        loader.onload = () => {
+          if (thumbs[current] !== target) return; // пока грузилось — уже перелистнули дальше
+          lbImg.src = fullSrc;
+          lbImg.classList.remove('lb-loading');
+        };
+        loader.onerror = () => {
+          if (thumbs[current] !== target) return;
+          lbImg.classList.remove('lb-loading');
+        };
+        loader.src = fullSrc;
+      } else {
+        lbImg.classList.remove('lb-loading');
+      }
+
+      const { start, end } = galleryBounds(current);
+      const atStart = current <= start;
+      const atEnd = current >= end;
+      lbPrevBtn.disabled = atStart;
+      lbNextBtn.disabled = atEnd;
+      lbPrevBtn.classList.toggle('lb-btn-disabled', atStart);
+      lbNextBtn.classList.toggle('lb-btn-disabled', atEnd);
+    };
+
+    const openAt = (i) => {
+      current = i;
+      render();
+    };
+
+    /* Листание кнопками/стрелками — только в пределах своей галереи,
+       без перехода на соседнюю и без зацикливания. */
+    const step = (delta) => {
+      const { start, end } = galleryBounds(current);
+      const next = current + delta;
+      if (next < start || next > end) return;
+      current = next;
+      render();
     };
 
     const closeLightbox = () => {
@@ -45,8 +104,8 @@
     });
 
     document.getElementById('lbClose').addEventListener('click', closeLightbox);
-    document.getElementById('lbPrev').addEventListener('click', () => openAt(current - 1));
-    document.getElementById('lbNext').addEventListener('click', () => openAt(current + 1));
+    lbPrevBtn.addEventListener('click', () => step(-1));
+    lbNextBtn.addEventListener('click', () => step(1));
 
     lightbox.addEventListener('click', (e) => {
       if (e.target === lightbox) closeLightbox();
@@ -55,8 +114,8 @@
     document.addEventListener('keydown', (e) => {
       if (!lightbox.classList.contains('open')) return;
       if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowLeft') openAt(current - 1);
-      if (e.key === 'ArrowRight') openAt(current + 1);
+      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key === 'ArrowRight') step(1);
     });
   }
 

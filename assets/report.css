@@ -208,6 +208,11 @@ body.lb-locked {
   max-height: 82vh;
   object-fit: contain;
   border-radius: 2px;
+  transition: filter .25s ease;
+}
+
+.lightbox img.lb-loading {
+  filter: blur(1.5px) brightness(0.9);
 }
 
 .lightbox-cap {
@@ -240,6 +245,11 @@ body.lb-locked {
 
 .lb-btn:hover {
   opacity: 1;
+}
+
+.lb-btn:disabled,
+.lb-btn-disabled {
+  display: none;
 }
 
 .lb-prev {
