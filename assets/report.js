@@ -20,6 +20,12 @@
   const thumbs = Array.from(document.querySelectorAll('.thumb img'));
   const lightbox = document.getElementById('lightbox');
 
+  /* Общий для лайтбокса и фонового прелоада: какие fullres-урлы уже
+     запрошены (или сейчас грузятся), чтобы не дублировать запрос и
+     чтобы прелоад мог пропускать то, что уже стартовало по клику. */
+  const requestedFull = new Set();
+  let lightboxIsOpen = false;
+
   if (lightbox && thumbs.length > 0) {
     const lbImg = document.getElementById('lbImg');
     const lbCap = document.getElementById('lbCap');
@@ -65,6 +71,8 @@
 
       if (fullSrc !== thumbSrc) {
         const loader = new Image();
+        if ('fetchPriority' in loader) loader.fetchPriority = 'high';
+        requestedFull.add(fullSrc);
         const finish = () => {
           if (thumbs[current] !== target) return; // уже перелистнули дальше
           lbImg.src = fullSrc;
@@ -86,6 +94,7 @@
 
     const openAt = (i) => {
       current = i;
+      lightboxIsOpen = true;
       render();
     };
 
@@ -102,6 +111,7 @@
     const closeLightbox = () => {
       lightbox.classList.remove('open');
       document.body.classList.remove('lb-locked');
+      lightboxIsOpen = false;
     };
 
     thumbs.forEach((img, i) => {
@@ -188,6 +198,7 @@
   if (thumbs.length > 0) {
     const BATCH_SIZE = 2;    // сколько фото грузим параллельно
     const BATCH_DELAY = 300; // пауза между пачками, мс
+    const PAUSE_CHECK_DELAY = 250; // как часто перепроверять, не открыт ли лайтбокс
 
     const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     const isSlow = conn && (conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g' || conn.effectiveType === '3g');
@@ -202,8 +213,18 @@
       const loadNextBatch = () => {
         if (index >= urls.length) return;
 
+        /* Пока человек смотрит фото в лайтбоксе — не отбираем у него
+           полосу пропускания фоновыми запросами, просто ждём. */
+        if (lightboxIsOpen) {
+          setTimeout(loadNextBatch, PAUSE_CHECK_DELAY);
+          return;
+        }
+
         urls.slice(index, index + BATCH_SIZE).forEach((url) => {
+          if (requestedFull.has(url)) return; // уже загружено/грузится по клику
+          requestedFull.add(url);
           const img = new Image();
+          if ('fetchPriority' in img) img.fetchPriority = 'low';
           img.src = url;
         });
 
