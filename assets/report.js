@@ -26,6 +26,7 @@
   const requestedFull = new Set();
   let lightboxIsOpen = false;
   let resumePreload = () => { }; // section 4 переопределит после инициализации
+  let pausePreload = () => { }; // section 4 переопределит: обрывает фоновые закачки
 
   if (lightbox && thumbs.length > 0) {
     const lbImg = document.getElementById('lbImg');
@@ -96,6 +97,7 @@
     const openAt = (i) => {
       current = i;
       lightboxIsOpen = true;
+      pausePreload(); // обрываем фоновые закачки — канал целиком под это фото
       render();
     };
 
@@ -197,6 +199,19 @@
   }
 
   /* ---------- 4. Тихий прелоад полноразмерных фото ---------- */
+  /* Раньше прелоад шёл строго по порядку документа (0, 1, 2, ...),
+     поэтому если открыть фото далеко от начала галереи, оно ещё
+     даже не попадало в очередь. А запросы уже начатых фоновых
+     закачек нельзя было отменить — они продолжали идти и после
+     открытия лайтбокса, отбирая канал у той фотографии, которую
+     человек реально смотрит.
+
+     Теперь: 1) очередь строится через IntersectionObserver — грузим
+     то, что приближается к области видимости, то есть синхронно со
+     скроллом человека, а не с начала списка; 2) закачки идут через
+     fetch()+AbortController, поэтому их можно реально ОБОРВАТЬ в
+     момент открытия лайтбокса, а не просто перестать добавлять
+     новые. */
   if (thumbs.length > 0) {
     const MAX_CONCURRENT = 2; // сколько фото грузим одновременно — по-настоящему,
     // не по таймеру, а по факту свободного слота
@@ -205,37 +220,81 @@
     const isSlow = conn && (conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g' || conn.effectiveType === '3g');
 
     if (!isSlow) {
-      const urls = thumbs
-        .map((img) => img.dataset.full)
-        .filter(Boolean);
-
-      let index = 0;
+      const queue = []; // URL-ы, ожидающие закачки, в порядке приближения к viewport
+      const inFlight = new Map(); // url -> AbortController текущей фоновой закачки
       let active = 0;
+      let started = false; // не запускаем закачки раньше window 'load'
+
+      const startLoad = (url) => {
+        requestedFull.add(url);
+        active++;
+        const controller = new AbortController();
+        inFlight.set(url, controller);
+        fetch(url, { signal: controller.signal, priority: 'low', credentials: 'same-origin' })
+          .catch(() => { }) // отменено или сеть подвела — не страшно, лайтбокс перезапросит сам
+          .finally(() => {
+            inFlight.delete(url);
+            active--;
+            pump();
+          });
+      };
 
       const pump = () => {
-        if (lightboxIsOpen) return; // возобновится сама через resumePreload() при закрытии
+        if (!started || lightboxIsOpen) return; // возобновится сама через resumePreload()
 
-        while (active < MAX_CONCURRENT && index < urls.length) {
-          const url = urls[index++];
+        while (active < MAX_CONCURRENT && queue.length > 0) {
+          const url = queue.shift();
           if (requestedFull.has(url)) continue; // уже грузится/загружено по клику
-          requestedFull.add(url);
-
-          active++;
-          const img = new Image();
-          if ('fetchPriority' in img) img.fetchPriority = 'low';
-          const done = () => {
-            active--;
-            pump(); // слот освободился — сразу берём следующее фото
-          };
-          img.onload = done;
-          img.onerror = done;
-          img.src = url;
+          startLoad(url);
         }
       };
 
+      const enqueue = (url) => {
+        if (!url || requestedFull.has(url) || queue.includes(url)) return;
+        queue.push(url);
+        pump();
+      };
+
+      /* Обрываем все фоновые закачки прямо сейчас — освобождаем
+         канал целиком под открытое в лайтбоксе фото. Недокачанное
+         помечаем как "не запрошено", чтобы при следующем проходе
+         очереди (или по клику) оно перезапустилось с нуля. */
+      const abortAllPreloads = () => {
+        inFlight.forEach((controller, url) => {
+          controller.abort();
+          requestedFull.delete(url);
+        });
+        inFlight.clear();
+        active = 0;
+      };
+
       resumePreload = pump;
+      pausePreload = abortAllPreloads;
+
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              enqueue(entry.target.dataset.full);
+              io.unobserve(entry.target);
+            }
+          });
+        }, { rootMargin: '1000px 0px' }); // с запасом вперёд по скроллу
+
+        thumbs.forEach((img) => {
+          if (img.dataset.full) io.observe(img);
+        });
+      } else {
+        // старые браузеры без IntersectionObserver — старое поведение,
+        // прелоадим всё по порядку документа
+        thumbs.forEach((img) => enqueue(img.dataset.full));
+      }
+
       window.addEventListener('load', () => {
-        setTimeout(pump, 1000);
+        setTimeout(() => {
+          started = true;
+          pump();
+        }, 500);
       });
     }
   }
