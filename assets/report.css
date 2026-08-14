@@ -203,16 +203,25 @@ body.lb-locked {
   overflow: hidden;
 }
 
+.lb-backdrop {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(28px) brightness(0.55);
+  transform: scale(1.15);
+  /* transform чуть увеличивает подложку, чтобы размытые края
+     не просвечивали пустотой по краям экрана */
+}
+
 .lightbox img {
+  position: relative;
   max-width: 90vw;
   max-height: 82vh;
   object-fit: contain;
   border-radius: 2px;
-  transition: filter .25s ease;
-}
-
-.lightbox img.lb-loading {
-  filter: blur(1.5px) brightness(0.9);
+  opacity: 0;
+  transition: opacity .25s ease;
 }
 
 .lightbox-cap {

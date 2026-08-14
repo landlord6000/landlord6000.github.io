@@ -38,37 +38,41 @@
       return { start, end };
     };
 
+    /* Пока грузится полноразмерное фото, картинка невидима (opacity:0),
+       а на её месте — маленький спиннер по центру, а не подложка на
+       весь экран. Как только фото готово — сразу проявляется уже в
+       финальном размере, поэтому видимого "прыжка" нет. */
+    const lbSpinner = document.createElement('div');
+    lbSpinner.className = 'lb-spinner';
+    lightbox.appendChild(lbSpinner);
+
     const render = () => {
       const target = thumbs[current];
-      const thumbSrc = target.src;               // уже загружено (это же превью в галерее)
-      const fullSrc = target.dataset.full || thumbSrc;
+      const fullSrc = target.dataset.full || target.src;
       const alt = target.alt;
 
-      /* Показываем то, что уже есть (превью), сразу — вместе с новой
-         подписью. Полноразмерное фото подменяем, когда оно догрузится,
-         чтобы не висела старая фотка под новым заголовком. */
-      lbImg.src = thumbSrc;
-      lbImg.alt = alt;
       lbCap.textContent = alt || '';
       lightbox.classList.add('open');
       document.body.classList.add('lb-locked');
 
-      if (fullSrc !== thumbSrc) {
-        lbImg.classList.add('lb-loading');
-        const loader = new Image();
-        loader.onload = () => {
-          if (thumbs[current] !== target) return; // пока грузилось — уже перелистнули дальше
-          lbImg.src = fullSrc;
-          lbImg.classList.remove('lb-loading');
-        };
-        loader.onerror = () => {
+      lbImg.style.opacity = 0;
+      lbSpinner.classList.add('visible');
+
+      const finish = () => {
+        if (thumbs[current] !== target) return; // уже перелистнули дальше
+        lbImg.src = fullSrc;
+        lbImg.alt = alt;
+        requestAnimationFrame(() => {
           if (thumbs[current] !== target) return;
-          lbImg.classList.remove('lb-loading');
-        };
-        loader.src = fullSrc;
-      } else {
-        lbImg.classList.remove('lb-loading');
-      }
+          lbImg.style.opacity = 1;
+          lbSpinner.classList.remove('visible');
+        });
+      };
+
+      const loader = new Image();
+      loader.onload = finish;
+      loader.onerror = finish;
+      loader.src = fullSrc;
 
       const { start, end } = galleryBounds(current);
       const atStart = current <= start;
