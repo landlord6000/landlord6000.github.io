@@ -27,6 +27,14 @@
     const lbNextBtn = document.getElementById('lbNext');
     let current = 0;
 
+    /* Оборачиваем #lbImg в фиксированный по размеру контейнер, не
+       трогая разметку HTML-страниц отчётов — иначе при подмене
+       thumb → fullres плывёт размер бокса (см. .lb-stage в CSS). */
+    const lbStage = document.createElement('div');
+    lbStage.className = 'lb-stage';
+    lbImg.parentNode.insertBefore(lbStage, lbImg);
+    lbStage.appendChild(lbImg);
+
     /* Границы "своей" галереи для индекса — чтобы при пролистывании
        не уезжать в фотографии соседней .gallery на той же странице. */
     const galleryBounds = (index) => {
@@ -38,41 +46,34 @@
       return { start, end };
     };
 
-    /* Пока грузится полноразмерное фото, картинка невидима (opacity:0),
-       а на её месте — маленький спиннер по центру, а не подложка на
-       весь экран. Как только фото готово — сразу проявляется уже в
-       финальном размере, поэтому видимого "прыжка" нет. */
-    const lbSpinner = document.createElement('div');
-    lbSpinner.className = 'lb-spinner';
-    lightbox.appendChild(lbSpinner);
-
     const render = () => {
       const target = thumbs[current];
-      const fullSrc = target.dataset.full || target.src;
+      const thumbSrc = target.currentSrc || target.src; // уже в кэше — появляется мгновенно
+      const fullSrc = target.dataset.full || thumbSrc;
       const alt = target.alt;
 
       lbCap.textContent = alt || '';
       lightbox.classList.add('open');
       document.body.classList.add('lb-locked');
 
-      lbImg.style.opacity = 0;
-      lbSpinner.classList.add('visible');
+      /* Сразу показываем растянутый thumb (он уже загружен), затем,
+         по мере готовности, бесшовно подменяем на полный размер. */
+      lbImg.src = thumbSrc;
+      lbImg.alt = alt;
+      lbImg.style.opacity = 1;
+      lbImg.classList.toggle('is-loading', fullSrc !== thumbSrc);
 
-      const finish = () => {
-        if (thumbs[current] !== target) return; // уже перелистнули дальше
-        lbImg.src = fullSrc;
-        lbImg.alt = alt;
-        requestAnimationFrame(() => {
-          if (thumbs[current] !== target) return;
-          lbImg.style.opacity = 1;
-          lbSpinner.classList.remove('visible');
-        });
-      };
-
-      const loader = new Image();
-      loader.onload = finish;
-      loader.onerror = finish;
-      loader.src = fullSrc;
+      if (fullSrc !== thumbSrc) {
+        const loader = new Image();
+        const finish = () => {
+          if (thumbs[current] !== target) return; // уже перелистнули дальше
+          lbImg.src = fullSrc;
+          lbImg.classList.remove('is-loading');
+        };
+        loader.onload = finish;
+        loader.onerror = finish;
+        loader.src = fullSrc;
+      }
 
       const { start, end } = galleryBounds(current);
       const atStart = current <= start;

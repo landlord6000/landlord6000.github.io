@@ -216,12 +216,30 @@ body.lb-locked {
 
 .lightbox img {
   position: relative;
-  max-width: 90vw;
-  max-height: 82vh;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   border-radius: 2px;
   opacity: 0;
-  transition: opacity .25s ease;
+  transition: opacity .25s ease, filter .3s ease;
+}
+
+/* Фиксированный бокс под фото — не зависит от того, thumb сейчас
+   показан или fullres, поэтому при подмене картинки бокс не прыгает,
+   меняется только чёткость самой картинки внутри него. */
+.lb-stage {
+  position: relative;
+  width: 90vw;
+  height: 82vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Пока грузится полноразмерное фото — на месте него уже показан
+   растянутый thumb, слегка размытый, чтобы не мозолил пиксели. */
+.lightbox img.is-loading {
+  filter: blur(6px);
 }
 
 .lightbox-cap {
