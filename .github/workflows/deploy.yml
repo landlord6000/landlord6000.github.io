@@ -1,0 +1,47 @@
+# Кладём этот файл в репозитории по пути: .github/workflows/deploy.yml
+#
+# Обычный "Deploy from a branch" в Settings → Pages НЕ разворачивает
+# git submodules (это просто ссылка-коммит в дереве, а не файлы).
+# Поэтому деплоим через Actions: чекаутим репозиторий рекурсивно
+# (вместе со всеми *-media сабмодулями) и публикуем как статику.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]      # поменяй на master, если ветка называется так
+  workflow_dispatch:        # чтобы можно было запускать вручную из вкладки Actions
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repo + submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive   # ключевой момент — подтягивает *-media репо
+          fetch-depth: 1
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site as Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .   # сайт статический, публикуем корень репозитория как есть
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
