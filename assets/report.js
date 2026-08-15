@@ -80,32 +80,53 @@
       }
 
       /* Сразу показываем растянутый thumb (он уже загружен), затем,
-         по мере готовности, бесшовно подменяем на полный размер. */
-      lbImg.src = thumbSrc;
-      lbImg.alt = alt;
-      lbImg.style.opacity = 1;
-      lbImg.classList.toggle('is-loading', fullSrc !== thumbSrc);
+         по мере готовности, бесшовно подменяем на полный размер.
 
-      if (fullSrc !== thumbSrc) {
-        const finish = () => {
-          if (thumbs[current] !== target) return; // уже перелистнули дальше
-          lbImg.src = fullSrc;
-          lbImg.classList.remove('is-loading');
-        };
+         Смена lbImg.src не перерисовывает картинку синхронно — старый
+         кадр остаётся на экране, пока новый не задекодируется. А смена
+         класса (is-loading → blur) попадает в ближайший paint сразу.
+         Из-за этого браузер на один кадр красит ЕЩЁ СТАРУЮ картинку
+         с уже применённым блюром — визуально "сначала блюрится текущее
+         фото, потом оно перелистывается". Чтобы так не происходило,
+         дожидаемся decode() нового thumb'а и меняем src/opacity/класс
+         одним синхронным блоком, когда есть что показать. */
+      const swap = () => {
+        if (thumbs[current] !== target) return; // уже перелистнули дальше, пока декодировали
 
-        if (inFlight.has(fullSrc)) {
-          // Эта же картинка уже качается фоном (мы не стали её обрывать
-          // в pausePreload) — просто ждём тот же fetch, а не запускаем
-          // второй запрос за тем же файлом с нуля.
-          inFlight.get(fullSrc).promise.then(finish, finish);
-        } else {
-          const loader = new Image();
-          if ('fetchPriority' in loader) loader.fetchPriority = 'high';
-          requestedFull.add(fullSrc);
-          loader.onload = finish;
-          loader.onerror = finish;
-          loader.src = fullSrc;
+        lbImg.src = thumbSrc;
+        lbImg.alt = alt;
+        lbImg.style.opacity = 1;
+        lbImg.classList.toggle('is-loading', fullSrc !== thumbSrc);
+
+        if (fullSrc !== thumbSrc) {
+          const finish = () => {
+            if (thumbs[current] !== target) return; // уже перелистнули дальше
+            lbImg.src = fullSrc;
+            lbImg.classList.remove('is-loading');
+          };
+
+          if (inFlight.has(fullSrc)) {
+            // Эта же картинка уже качается фоном (мы не стали её обрывать
+            // в pausePreload) — просто ждём тот же fetch, а не запускаем
+            // второй запрос за тем же файлом с нуля.
+            inFlight.get(fullSrc).promise.then(finish, finish);
+          } else {
+            const loader = new Image();
+            if ('fetchPriority' in loader) loader.fetchPriority = 'high';
+            requestedFull.add(fullSrc);
+            loader.onload = finish;
+            loader.onerror = finish;
+            loader.src = fullSrc;
+          }
         }
+      };
+
+      const preloaded = new Image();
+      preloaded.src = thumbSrc;
+      if (preloaded.decode) {
+        preloaded.decode().then(swap, swap);
+      } else {
+        swap();
       }
 
       const { start, end } = galleryBounds(current);
