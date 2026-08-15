@@ -24,6 +24,7 @@
      запрошены (или сейчас грузятся), чтобы не дублировать запрос и
      чтобы прелоад мог пропускать то, что уже стартовало по клику. */
   const requestedFull = new Set();
+  const inFlight = new Map(); // url -> { controller, promise } текущей фоновой закачки (section 4 наполняет)
   let lightboxIsOpen = false;
   let resumePreload = () => { }; // section 4 переопределит после инициализации
   let pausePreload = () => { }; // section 4 переопределит: обрывает фоновые закачки
@@ -72,17 +73,25 @@
       lbImg.classList.toggle('is-loading', fullSrc !== thumbSrc);
 
       if (fullSrc !== thumbSrc) {
-        const loader = new Image();
-        if ('fetchPriority' in loader) loader.fetchPriority = 'high';
-        requestedFull.add(fullSrc);
         const finish = () => {
           if (thumbs[current] !== target) return; // уже перелистнули дальше
           lbImg.src = fullSrc;
           lbImg.classList.remove('is-loading');
         };
-        loader.onload = finish;
-        loader.onerror = finish;
-        loader.src = fullSrc;
+
+        if (inFlight.has(fullSrc)) {
+          // Эта же картинка уже качается фоном (мы не стали её обрывать
+          // в pausePreload) — просто ждём тот же fetch, а не запускаем
+          // второй запрос за тем же файлом с нуля.
+          inFlight.get(fullSrc).promise.then(finish, finish);
+        } else {
+          const loader = new Image();
+          if ('fetchPriority' in loader) loader.fetchPriority = 'high';
+          requestedFull.add(fullSrc);
+          loader.onload = finish;
+          loader.onerror = finish;
+          loader.src = fullSrc;
+        }
       }
 
       const { start, end } = galleryBounds(current);
@@ -97,7 +106,11 @@
     const openAt = (i) => {
       current = i;
       lightboxIsOpen = true;
-      pausePreload(); // обрываем фоновые закачки — канал целиком под это фото
+      const target = thumbs[current];
+      const openingUrl = target.dataset.full || target.currentSrc || target.src;
+      pausePreload(openingUrl); // обрываем фоновые закачки, кроме той, что открываем сейчас —
+      // иначе клик по фото, чья фоновая закачка уже идёт, обрывает
+      // её на середине и запускает скачивание того же файла заново
       render();
     };
 
@@ -221,7 +234,6 @@
 
     if (!isSlow) {
       const queue = []; // URL-ы, ожидающие закачки, в порядке приближения к viewport
-      const inFlight = new Map(); // url -> AbortController текущей фоновой закачки
       let active = 0;
       let started = false; // не запускаем закачки раньше window 'load'
 
@@ -229,14 +241,14 @@
         requestedFull.add(url);
         active++;
         const controller = new AbortController();
-        inFlight.set(url, controller);
-        fetch(url, { signal: controller.signal, priority: 'low', credentials: 'same-origin' })
+        const promise = fetch(url, { signal: controller.signal, priority: 'low', credentials: 'same-origin' })
           .catch(() => { }) // отменено или сеть подвела — не страшно, лайтбокс перезапросит сам
           .finally(() => {
             inFlight.delete(url);
             active--;
             pump();
           });
+        inFlight.set(url, { controller, promise });
       };
 
       const pump = () => {
@@ -255,18 +267,20 @@
         pump();
       };
 
-      /* Обрываем все фоновые закачки прямо сейчас — освобождаем
-         канал целиком под открытое в лайтбоксе фото. Недокачанное
-         помечаем как "не запрошено", чтобы при следующем проходе
-         очереди (или по клику) оно перезапустилось с нуля. */
-      const abortAllPreloads = () => {
-        inFlight.forEach((controller, url) => {
+      /* Обрываем фоновые закачки — освобождаем канал под открытое в
+         лайтбоксе фото. exceptUrl — это как раз то фото, которое мы
+         открываем: если оно уже качается фоном, не обрываем его на
+         середине (иначе render() пришлось бы качать его заново с
+         нуля), а даём ему домотаться и переиспользуем в render(). */
+      const abortAllPreloads = (exceptUrl) => {
+        inFlight.forEach(({ controller }, url) => {
+          if (url === exceptUrl) return;
           controller.abort();
           requestedFull.delete(url);
           queue.unshift(url); // возвращаем в начало очереди
+          inFlight.delete(url);
+          active--;
         });
-        inFlight.clear();
-        active = 0;
       };
 
       resumePreload = pump;
