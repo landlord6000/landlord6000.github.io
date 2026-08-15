@@ -34,6 +34,7 @@
     const lbCap = document.getElementById('lbCap');
     const lbPrevBtn = document.getElementById('lbPrev');
     const lbNextBtn = document.getElementById('lbNext');
+    const lbOriginal = document.getElementById('lbOriginal');
     let current = 0;
 
     /* Оборачиваем #lbImg в фиксированный по размеру контейнер, не
@@ -64,6 +65,19 @@
       lbCap.textContent = alt || '';
       lightbox.classList.add('open');
       document.body.classList.add('lb-locked');
+
+      /* Оригинал — по клику пользователя, отдельным запросом. Не грузим
+         его сами ни при открытии, ни фоном: это то самое тяжёлое фото,
+         которое мы как раз не хотим тянуть без явного желания человека. */
+      const originalSrc = target.dataset.original;
+      if (lbOriginal) {
+        if (originalSrc) {
+          lbOriginal.href = originalSrc;
+          lbOriginal.style.display = '';
+        } else {
+          lbOriginal.style.display = 'none';
+        }
+      }
 
       /* Сразу показываем растянутый thumb (он уже загружен), затем,
          по мере готовности, бесшовно подменяем на полный размер. */

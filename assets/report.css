@@ -254,6 +254,36 @@ body.lb-locked {
   opacity: 0.85;
 }
 
+.lb-original {
+  position: absolute;
+  bottom: 28px;
+  right: 24px;
+  color: #E9EDE3;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  text-decoration: none;
+  opacity: 0.6;
+  letter-spacing: 0.02em;
+  padding: 6px 10px;
+  border: 1px solid rgba(233, 237, 227, 0.35);
+  border-radius: 3px;
+  transition: opacity .2s;
+}
+
+.lb-original:hover {
+  opacity: 1;
+}
+
+@media (max-width:600px) {
+  .lb-original {
+    bottom: auto;
+    top: 18px;
+    right: 68px;
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+}
+
 .lb-btn {
   position: absolute;
   top: 50%;
