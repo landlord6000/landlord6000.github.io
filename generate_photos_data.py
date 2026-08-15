@@ -2,16 +2,17 @@
 """
 generate_photos_data.py
 
-Сканирует travel/<report>/thumbs/*.jpg и собирает данные в photos.js
-(глобальный массив ALL_PHOTOS), который index.html подключает через
-<script src="photos.js"> и использует для случайного выбора фото
-на главной странице.
+Сканирует travel/media/<report>-media/thumbs/*.jpg (сабмодули с медиа)
+и собирает данные в photos.js (глобальный массив ALL_PHOTOS), который
+index.html подключает через <script src="photos.js"> и использует для
+случайного выбора фото на главной странице.
 
 Запускать из корня репозитория:
     python generate_photos_data.py
 
-Логика для каждой папки travel/<folder>/:
-  - фото берём из travel/<folder>/thumbs/*.jpg
+Логика для каждой папки travel/media/<folder>-media/:
+  - имя отчёта = <folder>-media без суффикса "-media"
+  - фото берём из travel/media/<folder>-media/thumbs/*.jpg
   - ссылка на отчёт = travel/<folder>/<folder>.html
   - название отчёта достаём из <h1>...</h1> внутри этого html;
     если не нашли — берём имя папки как есть (и предупреждаем).
@@ -26,9 +27,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 TRAVEL_DIR = ROOT / "travel"
+MEDIA_DIR = TRAVEL_DIR / "media"
 OUTPUT_JS = ROOT / "photos.js"
 
 IMG_EXTENSIONS = {".jpg", ".jpeg"}
+MEDIA_SUFFIX = "-media"
 
 H1_RE = re.compile(r"<h1[^>]*>(.*?)</h1>", re.IGNORECASE | re.DOTALL)
 TAG_RE = re.compile(r"<[^>]+>")
@@ -70,38 +73,46 @@ def natural_key(path: Path):
 
 
 def collect_photos():
-    if not TRAVEL_DIR.is_dir():
-        raise SystemExit(f"Не найдена папка {TRAVEL_DIR}")
+    if not MEDIA_DIR.is_dir():
+        raise SystemExit(f"Не найдена папка {MEDIA_DIR}")
 
     photos = []
-    report_folders = sorted(p for p in TRAVEL_DIR.iterdir() if p.is_dir())
+    media_folders = sorted(p for p in MEDIA_DIR.iterdir() if p.is_dir())
 
-    for folder in report_folders:
-        thumbs_dir = folder / "thumbs"
-        if not thumbs_dir.is_dir():
-            print(f"[skip] {folder.name}: нет папки thumbs/")
+    for media_folder in media_folders:
+        if not media_folder.name.endswith(MEDIA_SUFFIX):
+            print(f"[skip] {media_folder.name}: имя папки не оканчивается на "
+                  f"'{MEDIA_SUFFIX}'")
             continue
 
-        report_html = folder / f"{folder.name}.html"
+        report_name = media_folder.name[: -len(MEDIA_SUFFIX)]
+
+        thumbs_dir = media_folder / "thumbs"
+        if not thumbs_dir.is_dir():
+            print(f"[skip] {report_name}: нет папки thumbs/ в {media_folder.name}")
+            continue
+
+        folder = TRAVEL_DIR / report_name
+        report_html = folder / f"{report_name}.html"
         title = get_report_title(folder, report_html)
-        link = f"travel/{folder.name}/{folder.name}.html"
+        link = f"travel/{report_name}/{report_name}.html"
 
         images = sorted(
             (p for p in thumbs_dir.iterdir() if p.suffix.lower() in IMG_EXTENSIONS),
             key=natural_key,
         )
         if not images:
-            print(f"[skip] {folder.name}: в thumbs/ нет .jpg файлов")
+            print(f"[skip] {report_name}: в thumbs/ нет .jpg файлов")
             continue
 
         for img_path in images:
             photos.append({
-                "img": f"travel/{folder.name}/thumbs/{img_path.name}",
+                "img": f"travel/media/{media_folder.name}/thumbs/{img_path.name}",
                 "link": link,
                 "title": title,
             })
 
-        print(f"[ok]   {folder.name}: {len(images)} фото, title='{title}'")
+        print(f"[ok]   {report_name}: {len(images)} фото, title='{title}'")
 
     return photos
 
@@ -109,8 +120,8 @@ def collect_photos():
 def write_photos_js(photos):
     header = (
         "// Автоматически сгенерировано generate_photos_data.py — не редактировать руками.\n"
-        "// Чтобы обновить: положи новые фото в travel/<report>/photos/, прогони\n"
-        "// squeeze_jpg_to_thumbs, затем запусти python generate_photos_data.py заново.\n\n"
+        "// Чтобы обновить: положи новые фото в travel/media/<report>-media/photos/,\n"
+        "// прогони squeeze_jpg_to_thumbs, затем запусти python generate_photos_data.py заново.\n\n"
     )
     body = "const ALL_PHOTOS = " + json.dumps(photos, ensure_ascii=False, indent=2) + ";\n"
     OUTPUT_JS.write_text(header + body, encoding="utf-8")

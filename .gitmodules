@@ -1,0 +1,15 @@
+[submodule "travel/media/karelia-2023-media"]
+	path = travel/media/karelia-2023-media
+	url = https://github.com/landlord6000/karelia-2023-media
+[submodule "travel/media/valday-2023-media"]
+	path = travel/media/valday-2023-media
+	url = https://github.com/landlord6000/valday-2023-media
+[submodule "travel/media/moskvoretsky-2026-media"]
+	path = travel/media/moskvoretsky-2026-media
+	url = https://github.com/landlord6000/moskvoretsky-2026-media
+[submodule "travel/media/UAE-2024-media"]
+	path = travel/media/UAE-2024-media
+	url = https://github.com/landlord6000/UAE-2024-media
+[submodule "travel/media/sorolansaari-2026-media"]
+	path = travel/media/sorolansaari-2026-media
+	url = https://github.com/landlord6000/sorolansaari-2026-media
