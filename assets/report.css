@@ -221,7 +221,7 @@ body.lb-locked {
   object-fit: contain;
   border-radius: 2px;
   opacity: 0;
-  transition: opacity .1s ease;
+  transition: opacity .25s ease;
 }
 
 /* Фиксированный бокс под фото — не зависит от того, thumb сейчас
